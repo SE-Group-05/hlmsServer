@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const Joi = require('joi');
+const { schema } = require('./visitingPlaces');
 const Schema = mongoose.Schema;
 require('mongoose-currency').loadType(mongoose);
 const Currency = mongoose.Types.Currency;
@@ -35,4 +37,12 @@ const scheduleSchema = new Schema({
 
 var Schedules = mongoose.model('Schedule', scheduleSchema);
 
-module.exports = Schedules;
+const validateSchedule = (schedule)=>{
+    const schema = Joi.object({
+        'fair' : Joi.number().integer().required().min(0),
+        'date' : Joi.date()
+    });
+
+    return schema.validate(schedule);
+}
+module.exports ={Schedules,validateSchedule};
