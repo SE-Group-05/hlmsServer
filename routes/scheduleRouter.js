@@ -16,13 +16,13 @@ scheduleRouter.use(bodyParser.json());
 
 scheduleRouter.route('/')
     .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
-    .get(cors.cors, authenticate.verifyUser, scheduleController.getAllSchedules)
-    .post(cors.corsWithOptions, authenticate.verifyUser, scheduleController.addSchedule)
-    .put(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+    .get(cors.cors, scheduleController.getAllSchedules)
+    .post(cors.corsWithOptions, scheduleController.addSchedule)
+    .put(cors.corsWithOptions, (req, res, next) => {
         res.statusCode = 403;
         res.end('PUT operation not supported on /schedules');
     })
-    .delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, scheduleController.deleteAllSchedules);
+    .delete(cors.corsWithOptions, scheduleController.deleteAllSchedules);
 
 // **********************************************************************************
 // 
@@ -31,13 +31,13 @@ scheduleRouter.route('/')
 // **********************************************************************************
 
 scheduleRouter.route('/:scheduleId')
-    .options(cors.corsWithOptions, authenticate.verifyUser, (req, res) => { res.sendStatus(200); })
-    .get(cors.cors, authenticate.verifyUser, scheduleController.getScheduleDetailsById)
-    .post(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+    .options(cors.corsWithOptions,  (req, res) => { res.sendStatus(200); })
+    .get(cors.cors, scheduleController.getScheduleDetailsById)
+    .post(cors.corsWithOptions, (req, res, next) => {
         res.statusCode = 403;
         res.end('POST operation not supported on /schedules/' + req.params.scheduleId);
     })
-    .put(cors.corsWithOptions, authenticate.verifyUser, scheduleController.updateScheduleById)
-    .delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, scheduleController.deleteScheduleById);
+    .put(cors.corsWithOptions, scheduleController.updateScheduleById)
+    .delete(cors.corsWithOptions, scheduleController.deleteScheduleById);
 
 module.exports = scheduleRouter;

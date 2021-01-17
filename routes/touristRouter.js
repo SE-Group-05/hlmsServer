@@ -18,12 +18,12 @@ touristRouter.use(bodyParser.json());
 touristRouter.route('/')
     .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
     .get(cors.cors, touristController.getAllTourists)
-    .post(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, touristController.addTourist)
-    .put(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+    .post(cors.corsWithOptions, touristController.addTourist)
+    .put(cors.corsWithOptions, (req, res, next) => {
         res.statusCode = 403;
         res.end('PUT operation not supported on /tourists');
     })
-    .delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, touristController.deleteAllTourists);
+    .delete(cors.corsWithOptions, touristController.deleteAllTourists);
 
 // **********************************************************************************
 // 
@@ -34,11 +34,11 @@ touristRouter.route('/')
 touristRouter.route('/:touristId')
     .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
     .get(cors.cors, touristController.getTouristDetailsById)
-    .post(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+    .post(cors.corsWithOptions, (req, res, next) => {
         res.statusCode = 403;
         res.end('POST operation not supported on /tourists/' + req.params.touristId);
     })
-    .put(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, touristController.updateTouristDetailsById)
-    .delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, touristController.deleteATouristById);
+    .put(cors.corsWithOptions, touristController.updateTouristDetailsById)
+    .delete(cors.corsWithOptions, touristController.deleteATouristById);
 
 module.exports = touristRouter;
