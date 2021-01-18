@@ -64,4 +64,15 @@ const validatePlaces = (place) =>{
     return schema.validate(place);
 }
 
-module.exports = {Places,validatePlaces};
+const validatePoint = (point) =>{
+
+    const schema = Joi.object({
+
+        'type' : Joi.string().required().default('Point'),
+        'coordinates' : Joi.number().required()
+    });
+
+    return schema.validate(point);
+}
+
+module.exports = {Places,validatePlaces,validatePoint};
