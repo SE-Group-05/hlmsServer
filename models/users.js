@@ -20,7 +20,8 @@ var User = new Schema({
     role:
     {
         type: String,
-        default: "user"
+        default: "user",
+        enum:['user','moderater','admin']
     },
     profilePicturePath: {
         type: String

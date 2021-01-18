@@ -17,14 +17,38 @@ const getAllVisitingPlaces = (req, res, next) => {
 }
 
 const addVisitingPlace = (req, res, next) => {
-    VisitingPlaces.create(req.body)
+    var imagesArray = [];
+    // files = req.files;
+    // files.forEach(file => {
+    //     imagesArray.push(file.filename);
+    // });
+    var place =
+    {
+        name: req.body.name,
+        description: req.body.description,
+        location: {
+            coordinates: req.body.location.coordinates
+        },
+        distance: req.body.distance,
+        timeToReach: req.body.timeToReach,
+        images: imagesArray
+    }
+    VisitingPlaces.create(place)
         .then((visitingPlace) => {
             console.log('VisitingPlace Created ', visitingPlace);
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
             res.json(visitingPlace);
-        }, (err) => next(err))
-        .catch((err) => next(err));
+        }, (err) => {
+            res.statusCode = 500;
+            res.setHeader('Content-Type', 'application/json');
+            res.json({ error: "Duplicate Key" });
+        })
+        .catch((err) => {
+            res.statusCode = 500;
+            res.setHeader('Content-Type', 'application/json');
+            res.json({ error: "Duplicate Key" });
+        });
 }
 
 const deleteAllVisitingPlaces = (req, res, next) => {
