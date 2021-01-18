@@ -22,10 +22,6 @@ var User = new Schema({
         type: String,
         default: "user"
     },
-    password: {
-        type: String,
-        required: true
-    },
     profilePicturePath: {
         type: String
     }

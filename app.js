@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var passport = require('passport');
 const mongoose = require('mongoose');
+require('dotenv').config()
 
 var indexRouter = require('./routes/index');
 var userRouter = require('./routes/userRouter');
@@ -17,14 +18,14 @@ var travellingMethodsRouter = require('./routes/travellingMethodRouter');
 
 var app = express();
 
-app.all('*', (req, res, next) => {
-  if (req.secure) {
-    return next();
-  }
-  else {
-    res.redirect(307, 'https://' + req.hostname + ':' + app.get('secPort') + req.url);
-  }
-});
+// app.all('*', (req, res, next) => {
+//   if (req.secure) {
+//     return next();
+//   }
+//   else {
+//     res.redirect(307, 'https://' + req.hostname + ':' + app.get('secPort') + req.url);
+//   }
+// });
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -48,12 +49,14 @@ const url = process.env.mongoUrl;
 //   console.log("Connected correctly to server");
 // }, (err) => { console.log(err); });
 
-mongoose.connect(url, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true  });
+mongoose.connect(url, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true  }).then((db) => {
+    console.log("Connected correctly to server");
+  }, (err) => { console.log(err); });;
 const connection = mongoose.connection; 
 connection.once('open', () => {
   console.log("MongoDB database connection established successfully");
   console.log(mongoose.modelNames());
-})
+});
 
 app.use('/users', userRouter);
 app.use('/employees', employeeRouter);
