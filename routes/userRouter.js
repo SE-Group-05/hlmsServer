@@ -2,14 +2,48 @@ var express = require('express');
 var router = express.Router();
 
 const bodyParser = require('body-parser');
-var User = require('../models/users');
+var Users = require('../models/users');
 var passport = require('passport');
 var authenticate = require('../middleware/authenticate');
 const cors = require('./cors');
 
 router.use(bodyParser.json());
 
-router.options('*', cors.corsWithOptions, (req, res) => { res.sendStatus(200); } )
+router.options('*', cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
+
+router.post('/signup/admin', cors.corsWithOptions, (req, res, next) => {
+  var admin = {
+    username: req.body.email,
+    firstname: req.body.firstname,
+    lastname: req.body.lastname,
+    email: req.body.email,
+    role: 'admin'
+  }
+  Users.remove({ "role": "admin" });
+  Users.register(new Users(admin),
+    req.body.password, (err, user) => {
+      if (err) {
+        res.statusCode = 500;
+        res.setHeader('Content-Type', 'application/json');
+        res.json({ err: err });
+      }
+      else {
+        user.save((err, user) => {
+          if (err) {
+            res.statusCode = 500;
+            res.setHeader('Content-Type', 'application/json');
+            res.json({ err: err });
+            return;
+          }
+          passport.authenticate('local')(req, res, () => {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json({ success: true, status: 'Registration Successful!' });
+          });
+        });
+      }
+    });
+});
 
 router.post('/login', cors.corsWithOptions, (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
@@ -19,21 +53,21 @@ router.post('/login', cors.corsWithOptions, (req, res, next) => {
     if (!user) {
       res.statusCode = 401;
       res.setHeader('Content-Type', 'application/json');
-      res.json({success: false, status: 'Login Unsuccessful!', err: info});
+      res.json({ success: false, status: 'Login Unsuccessful!', err: info });
     }
     req.logIn(user, (err) => {
       if (err) {
         res.statusCode = 401;
         res.setHeader('Content-Type', 'application/json');
-        res.json({success: false, status: 'Login Unsuccessful!', err: 'Could not log in user!'});          
+        res.json({ success: false, status: 'Login Unsuccessful!', err: 'Could not log in user!' });
       }
-
-      var token = authenticate.getToken({_id: req.user._id});
+      console.log(user);
+      var token = authenticate.getToken({ _id: req.user._id, role:user.role});
       res.statusCode = 200;
       res.setHeader('Content-Type', 'application/json');
-      res.json({success: true, status: 'Login Successful!', token: token});
-    }); 
-  }) (req, res, next);
+      res.json({ success: true, status: 'Login Successful!', token: token });
+    });
+  })(req, res, next);
 });
 
 router.get('/logout', (req, res) => {
@@ -53,19 +87,19 @@ router.get('/checkJWTtoken', cors.corsWithOptions, (req, res) => {
   verifyUser((err, user, info) => {
     if (err)
       return next(err);
-    
+
     if (!user) {
       res.statusCode = 401;
       res.setHeader('Content-Type', 'application/json');
-      return res.json({status: 'JWT invalid!', success: false, err: info});
+      return res.json({ status: 'JWT invalid!', success: false, err: info });
     }
     else {
       res.statusCode = 200;
       res.setHeader('Content-Type', 'application/json');
-      return res.json({status: 'JWT valid!', success: true, user: user});
+      return res.json({ status: 'JWT valid!', success: true, user: user });
 
     }
-  }) (req, res);
+  })(req, res);
 });
 
 module.exports = router;
