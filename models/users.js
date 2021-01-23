@@ -17,6 +17,9 @@ var User = new Schema({
         required: true,
         unique: true
     },
+    mobile:{
+        type: String
+    },
     role:
     {
         type: String,
@@ -24,6 +27,13 @@ var User = new Schema({
         enum:['user','moderater','admin']
     },
     profilePicturePath: {
+        type: String
+    },
+    suite:{
+        type: String,
+        enum:['gold','luxury','platinum']
+    },
+    rommnumber:{
         type: String
     }
 }, {

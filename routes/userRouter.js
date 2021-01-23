@@ -73,7 +73,7 @@ router.post('/login', cors.corsWithOptions, (req, res, next) => {
   })(req, res, next);
 });
 
-router.post('/changepassowrd/:id', (req, res, next) => {
+router.post('/changepassoword/:id', (req, res, next) => {
   var userId = req.params.id;
   Users.findById(userId).then(function (sanitizedUser) {
     if (sanitizedUser) {
@@ -93,6 +93,38 @@ router.post('/changepassowrd/:id', (req, res, next) => {
     res.setHeader('Content-Type', 'application/json');
     res.json({ success: false, message: 'Error while updating Password' });
   });
+});
+
+router.post('/forgot', async (req, res, next) => {
+  // const token = (await promisify(crypto.randomBytes)(20)).toString('hex');
+  // const user = Users.find(u => u.email === req.body.email);
+
+  // if (!user) {
+  //   req.flash('error', 'No account with that email address exists.');
+  //   return res.redirect('/forgot');
+  // }
+
+  // user.resetPasswordToken = token;
+  // user.resetPasswordExpires = Date.now() + 3600000;
+
+  // const resetEmail = {
+  //   to: user.email,
+  //   from: 'passwordreset@example.com',
+  //   subject: 'Node.js Password Reset',
+  //   text: `
+  //     You are receiving this because you (or someone else) have requested the reset of the password for your account.
+  //     Please click on the following link, or paste this into your browser to complete the process:
+  //     http://${req.headers.host}/reset/${token}
+  //     If you did not request this, please ignore this email and your password will remain unchanged.
+  //   `,
+  // };
+  // const transport = nodemailer.createTransport(nodemailerSendgrid({
+  //   apiKey: SENDGRID_API_KEY,
+  // }));
+  // await transport.sendMail(resetEmail);
+  // req.flash('info', `An e-mail has been sent to ${user.email} with further instructions.`);
+
+  // res.redirect('/forgot');
 });
 
 router.get('/logout', (req, res) => {

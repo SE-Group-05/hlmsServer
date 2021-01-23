@@ -22,8 +22,12 @@ const scheduleSchema = new Schema({
     },
     state: {
         type: String,
-        default: "not-completed",
-        enum: ["not-completed","canceled","completed"]
+        default: "new",
+        enum: ["new","not-completed", "canceled", "completed"]
+    },
+    travellingMethod: {
+        type: String,
+        enum: ['Bus', 'Car', 'Train', 'Threewheeler', 'Foot']
     }
 }, {
     timestamps: true
