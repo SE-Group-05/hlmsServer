@@ -26,7 +26,7 @@ visitingPlaceRouter.route('/')
     .delete(cors.corsWithOptions, placeController.deleteAllVisitingPlaces);
 visitingPlaceRouter.route('/search')
     .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
-    .post(cors.corsWithOptions, placeController.addVisitingPlace);
+    .post(cors.corsWithOptions, placeController.getAllVisitingPlacesByName);
 
 // **********************************************************************************
 // 
