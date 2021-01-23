@@ -17,9 +17,13 @@ const getAllTourists = (req, res, next) => {
         .then((tourists) => {
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
-            res.json(tourists);
+            res.json({ success: true, tourists: tourists });
         }, (err) => next(err))
-        .catch((err) => next(err));
+        .catch((err) => {
+            res.statusCode = 500;
+            res.setHeader('Content-Type', 'application/json');
+            res.json({ success: false, message: 'Error while getting data' });
+        });
 }
 
 const addTourist = async (req, res, next) => {
@@ -37,18 +41,18 @@ const addTourist = async (req, res, next) => {
         if (error) {
             res.statusCode = 500;
             res.setHeader('Content-Type', 'application/json');
-            res.json({ error: result.message });
+            res.json({ success: false, message: err.message });
         } else {
             console.log('Tourist Created ', tourist);
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
-            res.json({ tourist: tourist, password: randomPassword });
+            res.json({  success: true, tourist: tourist, password: randomPassword });
         }
     } catch (error) {
         var error = new Error("Error while registering new user.");
         res.statusCode = 500;
         res.setHeader('Content-Type', 'application/json');
-        res.json({ error: error.message });
+        res.json({ success: false, message: err.message });
     }
 }
 
@@ -57,7 +61,7 @@ const deleteAllTourists = (req, res, next) => {
         .then((resp) => {
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
-            res.json(resp);
+            res.json({ success: true, response: resp });
         }, (err) => next(err))
         .catch((err) => next(err));
 }
@@ -78,21 +82,36 @@ const getTouristDetailsById = (req, res, next) => {
         .then((tourist) => {
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
-            res.json(tourist);
+            res.json({ success: true, tourist: tourist });
         }, (err) => next(err))
-        .catch((err) => next(err));
+        .catch((err) => {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json({ success: false, message: 'Error while getting data' });
+        });
 }
 
 const updateTouristDetailsById = (req, res, next) => {
+    var tourist = {
+        username: req.body.email,
+        firstname: req.body.firstname,
+        lastname: req.body.lastname,
+        email: req.body.email,
+        role: 'user'
+    }
     Tourists.findByIdAndUpdate(req.params.touristId, {
-        $set: req.body
+        $set: tourist
     }, { new: true })
         .then((tourist) => {
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
-            res.json(tourist);
+            res.json({ success: true, tourist: tourist });
         }, (err) => next(err))
-        .catch((err) => next(err));
+        .catch((err) => {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json({ success: false, message: 'Error while updating data' });
+        });
 }
 
 const deleteATouristById = (req, res, next) => {
@@ -100,9 +119,13 @@ const deleteATouristById = (req, res, next) => {
         .then((resp) => {
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
-            res.json(resp);
+            res.json({ success: true, response: resp });
         }, (err) => next(err))
-        .catch((err) => next(err));
+        .catch((err) => {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json({ success: false, message: 'Error while deleting data' });
+        });
 }
 
 exports.getTouristDetailsById = getTouristDetailsById;

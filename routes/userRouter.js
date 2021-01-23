@@ -68,13 +68,36 @@ router.post('/login', cors.corsWithOptions, (req, res, next) => {
       var roleToken = authenticate.getToken({ role: user.role });
       res.statusCode = 200;
       res.setHeader('Content-Type', 'application/json');
-      res.json({ success: true, status: 'Login Successful!', token: token ,user:{ _id: req.user._id, role: user.role }});
+      res.json({ success: true, status: 'Login Successful!', token: token, user: { _id: req.user._id, role: user.role } });
     });
   })(req, res, next);
 });
 
+router.post('/changepassowrd/:id', (req, res, next) => {
+  var userId = req.params.id;
+  Users.findById(userId).then(function (sanitizedUser) {
+    if (sanitizedUser) {
+      sanitizedUser.setPassword(newPasswordString, function () {
+        sanitizedUser.save();
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.json({ success: true, message: 'password reset successful' });
+      });
+    } else {
+      res.statusCode = 200;
+      res.setHeader('Content-Type', 'application/json');
+      res.json({ success: false, message: 'This user does not exist' });
+    }
+  }, function (err) {
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.json({ success: false, message: 'Error while updating Password' });
+  });
+});
+
 router.get('/logout', (req, res) => {
   if (req.session) {
+    req.logOut();
     req.session.destroy();
     res.clearCookie('session-id');
     res.redirect('/');

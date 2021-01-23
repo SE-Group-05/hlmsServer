@@ -17,9 +17,13 @@ const getAllEmployees = (req, res, next) => {
         .then((employees) => {
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
-            res.json(employees);
+            res.json({ success: true, employees: employees });
         }, (err) => next(err))
-        .catch((err) => next(err));
+        .catch((err) => {
+            res.statusCode = 500;
+            res.setHeader('Content-Type', 'application/json');
+            res.json({ success: false, message: 'Error while getting data' });
+        });
 }
 
 const addEmployee = async (req, res, next) => {
@@ -37,18 +41,18 @@ const addEmployee = async (req, res, next) => {
             var err = new Error("Error while registering new user.");
             res.statusCode = 500;
             res.setHeader('Content-Type', 'application/json');
-            res.json({ error: err.message });
+            res.json({ success: false, message: err.message });
         } else {
             console.log('Assistant Created ', employee);
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
-            res.json({ employee: employee, password: randomPassword });
+            res.json({ success: true, employee: employee, password: randomPassword });
         }
     } catch (error) {
         var err = new Error("Error while registering new user.");
         res.statusCode = 500;
         res.setHeader('Content-Type', 'application/json');
-        res.json({ error: err.message });
+        res.json({ success: false, message: err.message });
     }
 }
 
@@ -77,21 +81,33 @@ const getEmployeeDetailsById = (req, res, next) => {
         .then((employee) => {
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
-            res.json(employee);
+            res.json({ success: true, employee: employee });
         }, (err) => next(err))
         .catch((err) => next(err));
 }
 
 const updateEmployeeDetailsById = (req, res, next) => {
+    var employee = {
+        username: req.body.email,
+        firstname: req.body.firstname,
+        lastname: req.body.lastname,
+        email: req.body.email,
+        role: 'moderater'
+    }
     Employees.findByIdAndUpdate(req.params.employeeId, {
-        $set: req.body
+        $set: employee
     }, { new: true })
         .then((employee) => {
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
-            res.json(employee);
+            res.json({ success: true, employee: employee });
         }, (err) => next(err))
-        .catch((err) => next(err));
+        .catch((err) => {
+            var err = new Error("Error while updating.");
+            res.statusCode = 500;
+            res.setHeader('Content-Type', 'application/json');
+            res.json({ success: false, message: err.message });
+        });
 }
 
 const deleteAEmployeeById = (req, res, next) => {
@@ -101,7 +117,12 @@ const deleteAEmployeeById = (req, res, next) => {
             res.setHeader('Content-Type', 'application/json');
             res.json(resp);
         }, (err) => next(err))
-        .catch((err) => next(err));
+        .catch((err) => {
+            var err = new Error("Error while deletting.");
+            res.statusCode = 500;
+            res.setHeader('Content-Type', 'application/json');
+            res.json({ success: false, message: err.message });
+        });
 }
 
 exports.getEmployeeDetailsById = getEmployeeDetailsById;

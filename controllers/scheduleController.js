@@ -11,9 +11,28 @@ const getAllSchedules = (req, res, next) => {
         .then((schedules) => {
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
-            res.json(schedules);
+            res.json({ success: true, schedules:schedules });
         }, (err) => next(err))
-        .catch((err) => next(err));
+        .catch((err) => {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json({ success: false, message: "Failed to get data" });
+        });
+}
+
+const getAllSchedulesForAUser = (req, res, next) => {
+    var query = { "user": req.body.userid };
+    Schedules.find(query)
+        .then((schedules) => {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json({ success: true, schedules:schedules });
+        }, (err) => next(err))
+        .catch((err) => {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json({ success: false, message: "Failed to get data" });
+        });
 }
 
 const addSchedule = (req, res, next) => {
@@ -22,9 +41,13 @@ const addSchedule = (req, res, next) => {
             console.log('Schedule Created ', schedule);
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
-            res.json(schedule);
+            res.json({ success: true, schedule:schedule });
         }, (err) => next(err))
-        .catch((err) => next(err));
+        .catch((err) => {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json({ success: false, message: "Failed to add a schedule" });
+        });
 }
 
 const deleteAllSchedules = (req, res, next) => {
@@ -40,7 +63,7 @@ const deleteAllSchedules = (req, res, next) => {
 exports.getAllSchedules = getAllSchedules;
 exports.addSchedule = addSchedule;
 exports.deleteAllSchedules = deleteAllSchedules;
-
+exports.getAllSchedulesForAUser = getAllSchedulesForAUser;
 
 // **********************************************************************************
 // 
@@ -53,9 +76,13 @@ const getScheduleDetailsById = (req, res, next) => {
         .then((schedule) => {
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
-            res.json(schedule);
+            res.json({ success: true, schedule:schedule });
         }, (err) => next(err))
-        .catch((err) => next(err));
+        .catch((err) => {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json({ success: false, message: "Fetch failed" });
+        });
 }
 
 const updateScheduleById = (req, res, next) => {
@@ -65,9 +92,13 @@ const updateScheduleById = (req, res, next) => {
         .then((schedule) => {
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
-            res.json(schedule);
+            res.json({ success: true, schedule:schedule });
         }, (err) => next(err))
-        .catch((err) => next(err));
+        .catch((err) => {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json({ success: false, message: "Update failed" });
+        });
 }
 
 const deleteScheduleById = (req, res, next) => {
@@ -75,9 +106,13 @@ const deleteScheduleById = (req, res, next) => {
         .then((resp) => {
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
-            res.json(resp);
+            res.json({ success: true, response:resp });
         }, (err) => next(err))
-        .catch((err) => next(err));
+        .catch((err) => {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json({ success: false, message: "Delete failed" });
+        });
 }
 
 exports.getScheduleDetailsById = getScheduleDetailsById;
