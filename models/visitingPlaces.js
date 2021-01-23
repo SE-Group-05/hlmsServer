@@ -37,20 +37,21 @@ const placeSchema = new Schema({
         type: String,
         required: true
     },
-    images: [
+    image:
+    {
+        type: String,
+    },
+    travellingMethods: [
         {
             type: String,
+            enum: ['Bus', 'Car', 'Train', 'Threewheeler', 'Foot']
         }
-    ],
-    travellingMethods:[
-        {type:String,
-        enum:['Bus','Car','Train','Threewheeler','Foot']}
     ]
 }, {
     timestamps: true
 });
 
-placeSchema.index({'$**':'text'});
+placeSchema.index({ '$**': 'text' });
 var Places = mongoose.model('Place', placeSchema);
 
 module.exports = Places;

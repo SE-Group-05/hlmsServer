@@ -26,7 +26,7 @@ var User = new Schema({
         default: "user",
         enum:['user','moderater','admin']
     },
-    profilePicturePath: {
+    image: {
         type: String
     },
     suite:{

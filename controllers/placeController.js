@@ -14,7 +14,7 @@ const getAllVisitingPlaces = (req, res, next) => {
         // query = { $text: { $search: searchBy } }
         query={ name: { $regex: `${searchBy}`, $options: "i" } }
     }
-    VisitingPlaces.find(query, 'name description distance location timeToReach images travellingMethods')
+    VisitingPlaces.find(query, 'name description distance location timeToReach image travellingMethods')
         .then((visitingPlaces) => {
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
