@@ -1,4 +1,3 @@
-const { body } = require('express-validator');
 const VisitingPlaces = require('../models/visitingPlaces');
 
 // **********************************************************************************
@@ -8,6 +7,26 @@ const VisitingPlaces = require('../models/visitingPlaces');
 // **********************************************************************************
 
 const getAllVisitingPlaces = (req, res, next) => {
+    var query = {};
+    if (req.body.similarTo) {
+        var searchBy = req.body.similarTo || {}
+        // query = { $text: { $search: searchBy } }
+        query={ name: { $regex: `${searchBy}`, $options: "i" } }
+    }
+    VisitingPlaces.find(query, 'name description distance location timeToReach image travellingMethods')
+        .then((visitingPlaces) => {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json({ success: true, visitingPlaces: visitingPlaces });
+        }, (err) => next(err))
+        .catch((err) => {
+            res.statusCode = 500;
+            res.setHeader('Content-Type', 'application/json');
+            res.json({ success: false, message: 'Error while getting data' });
+        });
+}
+
+const getAllVisitingPlacesByName = (req, res, next) => {
     var query = {};
     if (req.body.similarTo) {
         var searchBy = req.body.similarTo || {}
@@ -74,6 +93,7 @@ const deleteAllVisitingPlaces = (req, res, next) => {
 }
 
 exports.getAllVisitingPlaces = getAllVisitingPlaces;
+exports.getAllVisitingPlacesByName = getAllVisitingPlacesByName;
 exports.addVisitingPlace = addVisitingPlace;
 exports.deleteAllVisitingPlaces = deleteAllVisitingPlaces;
 
