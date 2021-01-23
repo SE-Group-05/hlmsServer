@@ -41,7 +41,7 @@ var User = new Schema({
 });
 
 User.plugin(passportLocalMongoose);
-
+User.index({'$**':'text'});
 var Users = mongoose.model('User', User);
 
 module.exports = Users;

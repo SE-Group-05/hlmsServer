@@ -8,7 +8,13 @@ const VisitingPlaces = require('../models/visitingPlaces');
 // **********************************************************************************
 
 const getAllVisitingPlaces = (req, res, next) => {
-    VisitingPlaces.find(req.query, 'name description distance location timeToReach images travellingMethods')
+    var query = {};
+    if (req.body.similarTo) {
+        var searchBy = req.body.similarTo || {}
+        // query = { $text: { $search: searchBy } }
+        query={ name: { $regex: `${searchBy}`, $options: "i" } }
+    }
+    VisitingPlaces.find(query, 'name description distance location timeToReach images travellingMethods')
         .then((visitingPlaces) => {
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');

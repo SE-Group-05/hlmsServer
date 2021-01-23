@@ -50,6 +50,7 @@ const placeSchema = new Schema({
     timestamps: true
 });
 
+placeSchema.index({'$**':'text'});
 var Places = mongoose.model('Place', placeSchema);
 
 module.exports = Places;

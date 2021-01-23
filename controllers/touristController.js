@@ -10,9 +10,13 @@ const TouristService = require('../services/touristService');
 
 const getAllTourists = (req, res, next) => {
     var query = { "role": "user" };
+    if (req.body.similarTo) {
+        var searchBy = req.body.similarTo || {}
+        query = { "role": "user", $text: { $search: searchBy } }
+    }
+
     var sortby = req.body.sortBy || {};
-    var searchBy = req.body.similarTo || {}
-    var obj = Object.assign(query, searchBy);
+    // var obj = Object.assign(query, { $text: { $search: searchBy } });
     Tourists.find(query).sort(sortby)
         .then((tourists) => {
             res.statusCode = 200;
@@ -46,7 +50,7 @@ const addTourist = async (req, res, next) => {
             console.log('Tourist Created ', tourist);
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
-            res.json({  success: true, tourist: tourist, password: randomPassword });
+            res.json({ success: true, tourist: tourist, password: randomPassword });
         }
     } catch (error) {
         var error = new Error("Error while registering new user.");
