@@ -8,6 +8,7 @@ const places = [
         "distance": "20km",
         "timeToReach": "30min",
         "images": [],
+        "methods":['Bus', 'Car', 'Foot']
     },
     {
         "name": "Unawatuna",
@@ -18,6 +19,7 @@ const places = [
         "distance": "20km",
         "timeToReach": "30min",
         "images": [],
+        "methods":['Bus', 'Foot']
     },
     {
         "name": "Jungle Beach",
@@ -28,6 +30,7 @@ const places = [
         "distance": "20km",
         "timeToReach": "30min",
         "images": [],
+        "methods":['Foot']
     },
     {
         "name": "Galle Dutch Fort",
@@ -38,6 +41,7 @@ const places = [
         "distance": "20km",
         "timeToReach": "30min",
         "images": [],
+        "methods":['Car']
     },
 
 ]
