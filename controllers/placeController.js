@@ -27,7 +27,6 @@ const addVisitingPlace = (req, res, next) => {
     // files.forEach(file => {
     //     imagesArray.push(file.filename);
     // });
-    console.log(req.body);
     var place =
     {
         name: req.body.name,
@@ -83,9 +82,13 @@ const getVisitingPlaceDetailsById = (req, res, next) => {
         .then((visitingPlace) => {
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
-            res.json(visitingPlace);
+            res.json({ success: true, visitingPlace: visitingPlace });
         }, (err) => next(err))
-        .catch((err) => next(err));
+        .catch((err) => {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json({ success: false, message: "Could not find the place" });
+        });
 }
 
 const updateVisitingPlaceDetailsById = (req, res, next) => {
@@ -95,9 +98,13 @@ const updateVisitingPlaceDetailsById = (req, res, next) => {
         .then((visitingPlace) => {
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
-            res.json(visitingPlace);
+            res.json({ success: true, visitingPlace: visitingPlace });
         }, (err) => next(err))
-        .catch((err) => next(err));
+        .catch((err) => {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json({ success: false, message: "Update failed" });
+        });
 }
 
 const deleteAVisitingPlaceById = (req, res, next) => {
@@ -105,9 +112,13 @@ const deleteAVisitingPlaceById = (req, res, next) => {
         .then((resp) => {
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
-            res.json(resp);
+            res.json({ success: true, response: resp });
         }, (err) => next(err))
-        .catch((err) => next(err));
+        .catch((err) => {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json({ success: false, message: "Delete failed" });
+        });
 }
 
 exports.getVisitingPlaceDetailsById = getVisitingPlaceDetailsById;

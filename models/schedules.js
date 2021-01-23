@@ -15,10 +15,6 @@ const scheduleSchema = new Schema({
         type: Date,
         required: true
     },
-    travelingMethod: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "TravelingMethod"
-    },
     fair: {
         type: Currency,
         required: true,
