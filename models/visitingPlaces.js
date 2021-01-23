@@ -42,6 +42,10 @@ const placeSchema = new Schema({
             type: String,
         }
     ],
+    travellingMethods:[
+        {type:String,
+        enum:['Bus','Car','Train','Threeweeler','Foot']}
+    ]
 }, {
     timestamps: true
 });

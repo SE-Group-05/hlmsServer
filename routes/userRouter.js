@@ -19,7 +19,6 @@ router.post('/signup/admin', cors.corsWithOptions, (req, res, next) => {
     email: req.body.email,
     role: 'admin'
   }
-  Users.remove({ "role": "admin" });
   Users.register(new Users(admin),
     req.body.password, (err, user) => {
       if (err) {
@@ -28,6 +27,10 @@ router.post('/signup/admin', cors.corsWithOptions, (req, res, next) => {
         res.json({ err: err });
       }
       else {
+        if (req.body.firstname)
+          user.firstname = req.body.firstname;
+        if (req.body.lastname)
+          user.lastname = req.body.lastname;
         user.save((err, user) => {
           if (err) {
             res.statusCode = 500;
@@ -61,11 +64,11 @@ router.post('/login', cors.corsWithOptions, (req, res, next) => {
         res.setHeader('Content-Type', 'application/json');
         res.json({ success: false, status: 'Login Unsuccessful!', err: 'Could not log in user!' });
       }
-      console.log(user);
-      var token = authenticate.getToken({ _id: req.user._id, role:user.role});
+      var token = authenticate.getToken({ _id: req.user._id, role: user.role });
+      var roleToken = authenticate.getToken({ role: user.role });
       res.statusCode = 200;
       res.setHeader('Content-Type', 'application/json');
-      res.json({ success: true, status: 'Login Successful!', token: token });
+      res.json({ success: true, status: 'Login Successful!', token: token ,user:{ _id: req.user._id, role: user.role }});
     });
   })(req, res, next);
 });
