@@ -33,11 +33,10 @@ const signupAdmin = (req, res, next) => {
                         res.json({ err: err });
                         return;
                     }
-                    passport.authenticate('local')(req, res, () => {
-                        res.statusCode = 200;
-                        res.setHeader('Content-Type', 'application/json');
-                        res.json({ success: true, status: 'Registration Successful!' });
-                    });
+                    res.statusCode = 200;
+                    res.setHeader('Content-Type', 'application/json');
+                    res.json({ success: true, status: 'Registration Successful!' });
+
                 });
             }
         });
@@ -119,15 +118,12 @@ const changePassoword = (req, res, next) => {
 
 const logout = (req, res) => {
     if (req.session) {
-        req.logOut();
         req.session.destroy();
         res.clearCookie('session-id');
-        res.redirect('/');
     }
     else {
         var err = new Error('You are not logged in!');
         err.status = 403;
-        next(err);
     }
 }
 
