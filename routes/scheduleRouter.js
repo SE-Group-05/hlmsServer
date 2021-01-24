@@ -19,7 +19,7 @@ scheduleRouter.use(bodyParser.json());
 scheduleRouter.route('/')
     .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
     .get(cors.cors, authenticate.verifyUser, scheduleController.getAllSchedules)
-    .post(cors.corsWithOptions, authenticate.verifyUser, checkSchema(validationRules), scheduleController.addSchedule)
+    .post(cors.corsWithOptions, authenticate.verifyUser, (req,res,next)=> checkSchema(validationRules), scheduleController.addSchedule)
     .put(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
         res.statusCode = 403;
         res.end('PUT operation not supported on /schedules');
@@ -39,7 +39,7 @@ scheduleRouter.route('/:scheduleId')
         res.statusCode = 403;
         res.end('POST operation not supported on /schedules/' + req.params.scheduleId);
     })
-    .put(cors.corsWithOptions, authenticate.verifyUser, checkSchema(validationRules), scheduleController.updateScheduleById)
+    .put(cors.corsWithOptions, authenticate.verifyUser, (req,res,next)=> checkSchema(validationRules), scheduleController.updateScheduleById)
     .delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, scheduleController.deleteScheduleById);
 
 module.exports = scheduleRouter;

@@ -2,6 +2,21 @@
 
 A simple online hotel location management system built with MongodDB, Express.js and Node.js.
 
+## Table of Contents
+
+- [Hotel-Location-Management-System](#hotel-location-management-system)
+  - [Table of Contents](#table-of-contents)
+  - [Techonologies used in this application](#techonologies-used-in-this-application)
+    - [Front-end](#front-end)
+    - [Back-end](#back-end)
+  - [Install dependencies](#install-dependencies)
+    - [Install dev dependencies if needed](#install-dev-dependencies-if-needed)
+  - [Run the application](#run-the-application)
+  - [Functionalitites](#functionalitites)
+    - [Management functionalities](#management-functionalities)
+    - [Assistant functionalities](#assistant-functionalities)
+    - [Tourist functionalities](#tourist-functionalities)
+
 ## Techonologies used in this application
 
 ### Front-end

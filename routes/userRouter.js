@@ -17,11 +17,11 @@ userRouter.post('/signup/admin', cors.corsWithOptions, userController.signupAdmi
 
 userRouter.post('/login', cors.corsWithOptions, userController.login);
 
-userRouter.post('/changepassoword/:id', userController.changePassoword);
+userRouter.post('/changepassoword/:id',authenticate.verifyUser, userController.changePassoword);
 
-userRouter.post("/updateprofilepicture/:id", upload.UploadUserImage);
+userRouter.post("/updateprofilepicture/:id",authenticate.verifyUser, upload.UploadUserImage);
 
-userRouter.get('/logout', userController.logout);
+userRouter.get('/logout',authenticate.verifyUser, userController.logout);
 
 userRouter.get('/checkJWTtoken', cors.corsWithOptions, userController.checkJWTtoken);
 

@@ -19,16 +19,16 @@ visitingPlaceRouter.use(bodyParser.json());
 
 visitingPlaceRouter.route('/')
     .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
-    .get(cors.cors, authenticate.verifyUser, checkSchema(validationRules), placeController.getAllVisitingPlaces)
-    .post(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, checkSchema(validationRules), placeController.addVisitingPlace)
-    .put(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, checkSchema(validationRules), (req, res, next) => {
+    .get(cors.cors, authenticate.verifyUser, (req,res,next)=> checkSchema(validationRules), placeController.getAllVisitingPlaces)
+    .post(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req,res,next)=> checkSchema(validationRules), placeController.addVisitingPlace)
+    .put(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req,res,next)=> checkSchema(validationRules), (req, res, next) => {
         res.statusCode = 403;
         res.end('PUT operation not supported on /visitingPlaces');
     })
-    .delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, checkSchema(validationRules), placeController.deleteAllVisitingPlaces);
+    .delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req,res,next)=> checkSchema(validationRules), placeController.deleteAllVisitingPlaces);
 visitingPlaceRouter.route('/search')
     .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
-    .post(cors.corsWithOptions, authenticate.verifyUser, checkSchema(validationRules), placeController.getAllVisitingPlacesByName);
+    .post(cors.corsWithOptions, authenticate.verifyUser, (req,res,next)=> checkSchema(validationRules), placeController.getAllVisitingPlacesByName);
 
 // **********************************************************************************
 // 
@@ -38,12 +38,12 @@ visitingPlaceRouter.route('/search')
 
 visitingPlaceRouter.route('/:visitingPlaceId')
     .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
-    .get(cors.cors, authenticate.verifyUser, checkSchema(validationRules), placeController.getVisitingPlaceDetailsById)
+    .get(cors.cors, authenticate.verifyUser, (req,res,next)=> checkSchema(validationRules), placeController.getVisitingPlaceDetailsById)
     .post(cors.corsWithOptions, (req, res, next) => {
         res.statusCode = 403;
         res.end('POST operation not supported on /visitingPlaces/' + req.params.visitingPlaceId);
     })
-    .put(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, checkSchema(validationRules), placeController.updateVisitingPlaceDetailsById)
-    .delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, checkSchema(validationRules), placeController.deleteAVisitingPlaceById);
+    .put(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req,res,next)=> checkSchema(validationRules), placeController.updateVisitingPlaceDetailsById)
+    .delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req,res,next)=> checkSchema(validationRules), placeController.deleteAVisitingPlaceById);
 
 module.exports = visitingPlaceRouter;

@@ -49,19 +49,12 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 const url = process.env.mongoUrl;
-// const connect = mongoose.connect(url);
-
-// connect.then((db) => {
-//   console.log("Connected correctly to server");
-// }, (err) => { console.log(err); });
 
 mongoose.connect(url, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true  }).then((db) => {
-    console.log("Connected correctly to server");
   }, (err) => { console.log(err); });;
 const connection = mongoose.connection; 
 connection.once('open', () => {
   console.log("MongoDB database connection established successfully");
-  console.log(mongoose.modelNames());
 });
 
 app.use('/users', userRouter);
