@@ -2,7 +2,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const cors = require('./cors');
+const { checkSchema } = require('express-validator');
 var authenticate = require('../middleware/authenticate');
+var validationRules = require('../middleware/validation');
 const travellingMethodController = require('../controllers/travellingMethodController');
 
 const travellingMethodRouter = express.Router();

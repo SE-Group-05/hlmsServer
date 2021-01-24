@@ -90,7 +90,7 @@ const uploadPlaceImage = async (req, res, next) => {
                 }
             })
         } else {
-            imageUrl = 'profile.png';
+            imageUrl = 'image.png';
         }
 
         place.image = imageUrl;

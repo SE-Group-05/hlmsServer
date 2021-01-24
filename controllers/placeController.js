@@ -8,11 +8,6 @@ const VisitingPlaces = require('../models/visitingPlaces');
 
 const getAllVisitingPlaces = (req, res, next) => {
     var query = {};
-    if (req.body.similarTo) {
-        var searchBy = req.body.similarTo || {}
-        // query = { $text: { $search: searchBy } }
-        query={ name: { $regex: `${searchBy}`, $options: "i" } }
-    }
     VisitingPlaces.find(query, 'name description distance location timeToReach image travellingMethods')
         .then((visitingPlaces) => {
             res.statusCode = 200;

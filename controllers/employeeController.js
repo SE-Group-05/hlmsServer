@@ -8,11 +8,36 @@ const EmployeeService = require('../services/EmployeeService');
 // 
 // **********************************************************************************
 
+/**
+ * @description get details of the assistants
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ * @returns {array} list of employees
+ */
 const getAllEmployees = (req, res, next) => {
     var query = { "role": "moderater" };
+    Employees.find(query)
+        .then((employees) => {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json({ success: true, employees: employees });
+        }, (err) => next(err))
+        .catch((err) => {
+            res.statusCode = 500;
+            res.setHeader('Content-Type', 'application/json');
+            res.json({ success: false, message: 'Error while getting data' });
+        });
+}
+
+const getAllEmployeesByName = (req, res, next) => {
+    var query = { "role": "moderater" };
+    if (req.body.similarTo) {
+        var searchBy = req.body.similarTo || {}
+        query = { "role": "moderater", $text: { $search: searchBy } }
+    }
+
     var sortby = req.body.sortBy || {};
-    var searchBy = req.body.similarTo || {}
-    var obj = Object.assign(query, searchBy);
     Employees.find(query).sort(sortby)
         .then((employees) => {
             res.statusCode = 200;
@@ -67,6 +92,7 @@ const deleteAllEmployees = (req, res, next) => {
 }
 
 exports.getAllEmployees = getAllEmployees;
+exports.getAllEmployeesByName = getAllEmployeesByName;
 exports.addEmployee = addEmployee;
 exports.deleteAllEmployees = deleteAllEmployees;
 

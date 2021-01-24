@@ -2,6 +2,8 @@ var createError = require('http-errors');
 var express = require('express');
 const cors = require('cors');
 var path = require('path');
+const bodyParser = require('body-parser')
+const expressValidator = require('express-validator')
 var session = require('express-session');
 var FileStore = require('session-file-store')(session);
 var cookieParser = require('cookie-parser');
@@ -16,6 +18,7 @@ var employeeRouter = require('./routes/employeeRouter');
 var placeRouter = require('./routes/placeRouter');
 var scheduleRouter = require('./routes/scheduleRouter');
 var touristRouter = require('./routes/touristRouter');
+var dashboardRouter = require('./routes/dashboardRouter');
 var travellingMethodsRouter = require('./routes/travellingMethodRouter');
 
 var app = express();
@@ -36,6 +39,7 @@ app.use(cors());
 app.use(passport.initialize());
 
 app.use('/', indexRouter);
+app.use(bodyParser.json());
 
 app.use(cookieParser('the-immortal-coils'));
 app.use(logger('dev'));
@@ -65,6 +69,7 @@ app.use('/employees', employeeRouter);
 app.use('/places', placeRouter);
 app.use('/schedules', scheduleRouter);
 app.use('/tourists', touristRouter);
+app.use('/dashboard', dashboardRouter);
 app.use('/travellingMethods', travellingMethodsRouter);
 
 // catch 404 and forward to error handler

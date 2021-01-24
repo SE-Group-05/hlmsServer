@@ -35,6 +35,11 @@ var User = new Schema({
     },
     rommnumber:{
         type: String
+    },
+    userstate:{
+        type: String,
+        default: "in",
+        enum:['in','out']
     }
 }, {
     timestamps: true

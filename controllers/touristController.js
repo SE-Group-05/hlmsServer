@@ -10,13 +10,28 @@ const TouristService = require('../services/touristService');
 
 const getAllTourists = (req, res, next) => {
     var query = { "role": "user" };
+    // var obj = Object.assign(query, { $text: { $search: searchBy } });
+    Tourists.find(query)
+        .then((tourists) => {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json({ success: true, tourists: tourists });
+        }, (err) => next(err))
+        .catch((err) => {
+            res.statusCode = 500;
+            res.setHeader('Content-Type', 'application/json');
+            res.json({ success: false, message: 'Error while getting data' });
+        });
+}
+
+const getAllTouristsByName = (req, res, next) => {
+    var query = { "role": "user" };
     if (req.body.similarTo) {
         var searchBy = req.body.similarTo || {}
         query = { "role": "user", $text: { $search: searchBy } }
     }
 
     var sortby = req.body.sortBy || {};
-    // var obj = Object.assign(query, { $text: { $search: searchBy } });
     Tourists.find(query).sort(sortby)
         .then((tourists) => {
             res.statusCode = 200;
@@ -71,6 +86,7 @@ const deleteAllTourists = (req, res, next) => {
 }
 
 exports.getAllTourists = getAllTourists;
+exports.getAllTouristsByName = getAllTouristsByName;
 exports.addTourist = addTourist;
 exports.deleteAllTourists = deleteAllTourists;
 

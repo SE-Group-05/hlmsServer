@@ -22,7 +22,6 @@ opts.secretOrKey = process.env.secretKey;
 
 exports.jwtPassport = passport.use(new JwtStrategy(opts,
     (jwt_payload, done) => {
-        console.log('DOES VERIY USER COMES HERE???');
         console.log("JWT payload: ", jwt_payload);
         User.findOne({ _id: jwt_payload._id }, (err, user) => {
             if (err) {
@@ -57,11 +56,11 @@ exports.verifyAdmin = (req, res, next) => {
 }
 
 exports.verifyModerater = (req, res, next) => {
-    if (req.user.role == 'moderater') {
+    if (req.user.role != 'user') {
         console.log('Congrats! You are an Moderater');
         return next();
     }
-    else if (req.user.role != 'moderater') {
+    else if (req.user.role == 'user') {
         err = new Error('You are not authorized to perform this operation!');
         err.status = 403;
         return next(err);

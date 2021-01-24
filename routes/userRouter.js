@@ -1,25 +1,28 @@
 var express = require('express');
-var router = express.Router();
+var userRouter = express.Router();
 
 const bodyParser = require('body-parser');
 var upload = require('../controllers/upload');
+const { checkSchema } = require('express-validator');
+var authenticate = require('../middleware/authenticate');
+var validationRules = require('../middleware/validation');
 var userController = require('../controllers/userController');
 const cors = require('./cors');
 
-router.use(bodyParser.json());
+userRouter.use(bodyParser.json());
 
-router.options('*', cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
+userRouter.options('*', cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
 
-router.post('/signup/admin', cors.corsWithOptions, userController.signupAdmin);
+userRouter.post('/signup/admin', cors.corsWithOptions, userController.signupAdmin);
 
-router.post('/login', cors.corsWithOptions, userController.login);
+userRouter.post('/login', cors.corsWithOptions, userController.login);
 
-router.post('/changepassoword/:id', userController.changePassoword);
+userRouter.post('/changepassoword/:id', userController.changePassoword);
 
-router.post("/updateprofilepicture/:id", upload.UploadUserImage);
+userRouter.post("/updateprofilepicture/:id", upload.UploadUserImage);
 
-router.get('/logout', userController.logout);
+userRouter.get('/logout', userController.logout);
 
-router.get('/checkJWTtoken', cors.corsWithOptions, userController.checkJWTtoken);
+userRouter.get('/checkJWTtoken', cors.corsWithOptions, userController.checkJWTtoken);
 
-module.exports = router;
+module.exports = userRouter;
