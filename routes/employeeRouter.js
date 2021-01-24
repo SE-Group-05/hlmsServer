@@ -42,7 +42,7 @@ employeeRouter.route('/:employeeId')
         res.statusCode = 403;
         res.end('POST operation not supported on /employees/' + req.params.employeeId);
     })
-    .put(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, checkSchema(validationRules), employeeController.updateEmployeeDetailsById)
+    .put(cors.corsWithOptions,  checkSchema(validationRules), employeeController.updateEmployeeDetailsById)
     .delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, checkSchema(validationRules), employeeController.deleteAEmployeeById);
 
 module.exports = employeeRouter;
