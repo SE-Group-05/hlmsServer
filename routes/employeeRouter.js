@@ -18,8 +18,8 @@ employeeRouter.use(bodyParser.json());
 
 employeeRouter.route('/')
     .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
-    .get(cors.cors, authenticate.verifyUser, authenticate.verifyAdmin, checkSchema(validationRules), employeeController.getAllEmployees)
-    .post(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, checkSchema(validationRules), employeeController.addEmployee)
+    .get(cors.cors,  checkSchema(validationRules), employeeController.getAllEmployees)
+    .post(cors.corsWithOptions,checkSchema(validationRules), employeeController.addEmployee)
     .put(cors.corsWithOptions, (req, res, next) => {
         res.statusCode = 403;
         res.end('PUT operation not supported on /employees');
@@ -27,7 +27,7 @@ employeeRouter.route('/')
     .delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, checkSchema(validationRules), employeeController.deleteAllEmployees);
 employeeRouter.route('/search')
     .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
-    .post(cors.corsWithOptions, authenticate.verifyUser, checkSchema(validationRules), employeeController.getAllEmployeesByName);
+    .post(cors.corsWithOptions, checkSchema(validationRules), employeeController.getAllEmployeesByName);
 
 // **********************************************************************************
 // 
