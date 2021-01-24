@@ -43,7 +43,7 @@ visitingPlaceRouter.route('/:visitingPlaceId')
         res.statusCode = 403;
         res.end('POST operation not supported on /visitingPlaces/' + req.params.visitingPlaceId);
     })
-    .put(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, checkSchema(validationRules), placeController.updateVisitingPlaceDetailsById)
+    .put(cors.corsWithOptions,  checkSchema(validationRules), placeController.updateVisitingPlaceDetailsById)
     .delete(cors.corsWithOptions, checkSchema(validationRules), placeController.deleteAVisitingPlaceById);
 
 module.exports = visitingPlaceRouter;

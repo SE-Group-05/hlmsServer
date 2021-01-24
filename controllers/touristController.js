@@ -53,9 +53,7 @@ const addTourist = async (req, res, next) => {
         lastname: req.body.lastname,
         email: req.body.email,
         mobile: req.body.mobile,
-        role: 'user',
-        suite: req.body.suite,
-        roomnumber: req.body.roomnumber
+        role: 'user'
     }
     try {
         const error = await TouristService.addTourist(tourist, randomPassword);

@@ -19,7 +19,7 @@ const signupAdmin = (req, res, next) => {
             if (err) {
                 res.statusCode = 500;
                 res.setHeader('Content-Type', 'application/json');
-                res.json({ err: err });
+                res.json({ success: false, status: 'Registration Successful!' });
             }
             else {
                 if (req.body.firstname)
@@ -30,14 +30,12 @@ const signupAdmin = (req, res, next) => {
                     if (err) {
                         res.statusCode = 500;
                         res.setHeader('Content-Type', 'application/json');
-                        res.json({ err: err });
+                        res.json({ success: false, status: 'Registration uccessful!' });
                         return;
                     }
-                    passport.authenticate('local')(req, res, () => {
-                        res.statusCode = 200;
-                        res.setHeader('Content-Type', 'application/json');
-                        res.json({ success: true, status: 'Registration Successful!' });
-                    });
+                    res.statusCode = 200;
+                    res.setHeader('Content-Type', 'application/json');
+                    res.json({ success: true, status: 'Registration Successful!' });
                 });
             }
         });
@@ -127,7 +125,6 @@ const logout = (req, res) => {
     else {
         var err = new Error('You are not logged in!');
         err.status = 403;
-        next(err);
     }
 }
 
