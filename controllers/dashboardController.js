@@ -6,6 +6,7 @@ exports.getDashboard = async (req, res, next) => {
     try {
         const users_count = await User.find().countDocuments() - 1;
         const tourist_count_total = await User.find({ "role": "user" }).countDocuments();
+        const assistant_count_total = await User.find({ "role": "moderater" }).countDocuments();
         const tourist_count_in = await User.find({ "role": "user", "userstate": "in" }).countDocuments();
         const place_count = await Place.find().countDocuments();
         const place_locations = await Place.find({}, "name location");
@@ -21,6 +22,7 @@ exports.getDashboard = async (req, res, next) => {
             success: true, dashboardValues: {
                 users_count : users_count,
                 tourist_count_total : tourist_count_total,
+                assistant_count_total:assistant_count_total,
                 tourist_count_in : tourist_count_in,
                 place_count : place_count,
                 place_locations :place_locations,
