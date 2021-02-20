@@ -17,19 +17,19 @@ const scheduleSchema = new Schema({
         type: Date,
         required: true
     },
-    travelingMethod: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "TravelingMethod"
-    },
     fair: {
         type: Currency,
-        required: true,
         min: 0
     },
     state: {
         type: String,
-        default: "not-completed",
-        enum: ["not-completed","canceled","completed"]
+        default: "new",
+        enum: ["new","not-completed", "canceled", "completed"]
+    },
+    travellingMethod: {
+        type: String,
+        required: true,
+        enum: ['Bus', 'Car', 'Train', 'Threewheeler', 'Foot']
     }
 }, {
     timestamps: true

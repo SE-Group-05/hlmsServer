@@ -1,0 +1,62 @@
+###
+POST http://localhost:5000/users/signup/admin
+Content-Type: application/json
+
+{
+    "firstname": "Saman",
+    "lastname": "Perera",
+    "email": "saman@gmail.com",
+    "password": "123456"
+}
+
+###
+POST http://localhost:5000/users/login
+Content-Type: application/json
+
+{
+    "username": "saman@gmail.com",
+    "password": "123456"
+}
+
+###
+POST http://localhost:5000/employees/search
+Content-Type: application/json
+
+{
+    "similarTo": "sam"
+}
+
+###
+POST http://localhost:5000/tourists
+Content-Type: application/json
+
+{
+    "firstname": "Dinesh",
+    "lastname": "Chandimal",
+    "email":"dineshchandimal@gmail.com",
+    "mobile": "0213456855"
+}
+
+###
+GET http://localhost:5000/tourists
+
+###
+GET http://localhost:5000/places
+
+
+###
+POST http://localhost:5000/schedules
+Content-Type: application/json
+
+{
+    "user": "60301fcd798e0c3f7cce5713",
+    "place": "6005c75bdf8de03a6ca1e0e4",
+    "date": "2021-12-01",
+    "travellingMethod": "Foot"
+}
+
+###
+GET http://localhost:5000/schedules
+
+###
+GET http://localhost:5000/schedules/user/60301fcd798e0c3f7cce5713

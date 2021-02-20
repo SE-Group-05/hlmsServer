@@ -2,6 +2,10 @@ var createError = require('http-errors');
 var express = require('express');
 const cors = require('cors');
 var path = require('path');
+const bodyParser = require('body-parser')
+const expressValidator = require('express-validator')
+var session = require('express-session');
+var FileStore = require('session-file-store')(session);
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var passport = require('passport');
@@ -14,6 +18,7 @@ var employeeRouter = require('./routes/employeeRouter');
 var placeRouter = require('./routes/placeRouter');
 var scheduleRouter = require('./routes/scheduleRouter');
 var touristRouter = require('./routes/touristRouter');
+var dashboardRouter = require('./routes/dashboardRouter');
 var travellingMethodsRouter = require('./routes/travellingMethodRouter');
 
 var app = express();
@@ -33,6 +38,7 @@ app.set('view engine', 'jade');
 app.use(cors());
 
 app.use('/', indexRouter);
+app.use(bodyParser.json());
 
 app.use(cookieParser('the-immortal-coils'));
 app.use(logger('dev'));
@@ -42,24 +48,20 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 const url = process.env.mongoUrl;
-// const connect = mongoose.connect(url);
 
-// connect.then((db) => {
-//   console.log("Connected correctly to server");
-// }, (err) => { console.log(err); });
-
-mongoose.connect(url, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true  });
+mongoose.connect(url, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true  }).then((db) => {
+  }, (err) => {});;
 const connection = mongoose.connection; 
 connection.once('open', () => {
   console.log("MongoDB database connection established successfully");
-  console.log(mongoose.modelNames());
-})
+});
 
 app.use('/users', userRouter);
 app.use('/employees', employeeRouter);
 app.use('/places', placeRouter);
 app.use('/schedules', scheduleRouter);
 app.use('/tourists', touristRouter);
+app.use('/dashboard', dashboardRouter);
 app.use('/travellingMethods', travellingMethodsRouter);
 
 // catch 404 and forward to error handler

@@ -38,15 +38,21 @@ const placeSchema = new Schema({
         type: String,
         required: true
     },
-    images: [
+    image:
+    {
+        type: String,
+    },
+    travellingMethods: [
         {
             type: String,
+            enum: ['Bus', 'Car', 'Train', 'Threewheeler', 'Foot']
         }
-    ],
+    ]
 }, {
     timestamps: true
 });
 
+placeSchema.index({ '$**': 'text' });
 var Places = mongoose.model('Place', placeSchema);
 
 const validatePlaces = (place) =>{
@@ -75,4 +81,4 @@ const validatePoint = (point) =>{
     return schema.validate(point);
 }
 
-module.exports = {Places,validatePlaces,validatePoint};
+module.exports = Places;

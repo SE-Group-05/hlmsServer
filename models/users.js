@@ -14,22 +14,39 @@ var User = new Schema({
         type: String,
         required: true
     },
+    fullname: {
+        type: String,
+        required: true,
+        unique: true
+    },
     email: {
         type: String,
         required: true,
         unique: true
     },
+    mobile:{
+        type: String
+    },
     role:
     {
         type: String,
-        default: "user"
+        default: "user",
+        enum:['user','moderater','admin']
     },
-    password: {
-        type: String,
-        required: true
-    },
-    profilePicturePath: {
+    image: {
         type: String
+    },
+    suite:{
+        type: String,
+        enum:['gold','luxury','platinum']
+    },
+    rommnumber:{
+        type: String
+    },
+    userstate:{
+        type: String,
+        default: "in",
+        enum:['in','out']
     }
 }, {
     timestamps: true
@@ -38,7 +55,7 @@ var User = new Schema({
 
 
 User.plugin(passportLocalMongoose);
-
+User.index({'$**':'text'});
 var Users = mongoose.model('User', User);
 
 const validateUser = (user) =>{

@@ -1,71 +1,28 @@
 var express = require('express');
-var router = express.Router();
+var userRouter = express.Router();
 
 const bodyParser = require('body-parser');
-var User = require('../models/users');
-var passport = require('passport');
+var upload = require('../controllers/upload');
+const { checkSchema } = require('express-validator');
 var authenticate = require('../middleware/authenticate');
+var validationRules = require('../middleware/validation');
+var userController = require('../controllers/userController');
 const cors = require('./cors');
 
-router.use(bodyParser.json());
+userRouter.use(bodyParser.json());
 
-router.options('*', cors.corsWithOptions, (req, res) => { res.sendStatus(200); } )
+userRouter.options('*', cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
 
-router.post('/login', cors.corsWithOptions, (req, res, next) => {
-  passport.authenticate('local', (err, user, info) => {
-    if (err)
-      return next(err);
+userRouter.post('/signup/admin', cors.corsWithOptions, userController.signupAdmin);
 
-    if (!user) {
-      res.statusCode = 401;
-      res.setHeader('Content-Type', 'application/json');
-      res.json({success: false, status: 'Login Unsuccessful!', err: info});
-    }
-    req.logIn(user, (err) => {
-      if (err) {
-        res.statusCode = 401;
-        res.setHeader('Content-Type', 'application/json');
-        res.json({success: false, status: 'Login Unsuccessful!', err: 'Could not log in user!'});          
-      }
+userRouter.post('/login', cors.corsWithOptions, userController.login);
 
-      var token = authenticate.getToken({_id: req.user._id});
-      res.statusCode = 200;
-      res.setHeader('Content-Type', 'application/json');
-      res.json({success: true, status: 'Login Successful!', token: token});
-    }); 
-  }) (req, res, next);
-});
+userRouter.post('/changepassoword/:id',authenticate.verifyUser, userController.changePassoword);
 
-router.get('/logout', (req, res) => {
-  if (req.session) {
-    req.session.destroy();
-    res.clearCookie('session-id');
-    res.redirect('/');
-  }
-  else {
-    var err = new Error('You are not logged in!');
-    err.status = 403;
-    next(err);
-  }
-});
+userRouter.post("/updateprofilepicture/:id",authenticate.verifyUser, upload.UploadUserImage);
 
-router.get('/checkJWTtoken', cors.corsWithOptions, (req, res) => {
-  verifyUser((err, user, info) => {
-    if (err)
-      return next(err);
-    
-    if (!user) {
-      res.statusCode = 401;
-      res.setHeader('Content-Type', 'application/json');
-      return res.json({status: 'JWT invalid!', success: false, err: info});
-    }
-    else {
-      res.statusCode = 200;
-      res.setHeader('Content-Type', 'application/json');
-      return res.json({status: 'JWT valid!', success: true, user: user});
+userRouter.get('/logout',authenticate.verifyUser, userController.logout);
 
-    }
-  }) (req, res);
-});
+userRouter.get('/checkJWTtoken', cors.corsWithOptions, userController.checkJWTtoken);
 
-module.exports = router;
+module.exports = userRouter;
