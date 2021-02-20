@@ -4,8 +4,13 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "dev": "nodemon ./bin/www"
-  },
+    "dev": "nodemon ./bin/www",
+    "build:ui": "rm -rf build && cd ../hlms-frontend/ && npm run build --prod && cp -r build ../hlmsServer/",
+    "deploy": "git push heroku main",
+    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && npm run deploy",    
+    "logs:prod": "heroku logs --tail"
+  }, 
+
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "cookie-parser": "~1.4.4",

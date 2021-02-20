@@ -38,7 +38,6 @@ app.set('view engine', 'jade');
 app.use(cors());
 app.use(passport.initialize());
 
-app.use('/', indexRouter);
 app.use(bodyParser.json());
 
 app.use(cookieParser('the-immortal-coils'));
@@ -46,7 +45,8 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+// app.use(express.static('build'));
+app.use(express.static(path.join(__dirname, 'build')));
 
 const url = process.env.mongoUrl;
 
