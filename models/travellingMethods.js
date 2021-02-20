@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const Joi = require('joi');
 const Schema = mongoose.Schema;
 
 require('mongoose-currency').loadType(mongoose);
@@ -24,14 +23,4 @@ const travellingMethodSchema = new Schema({
 
 var TravellingMethods = mongoose.model('TravellingMethod', travellingMethodSchema);
 
-const validateTravelMethod = (method) =>{
-    const shema = Joi.object({
-        'name' : Joi.string().required(),
-        'fair' : Joi.number().integer().required().min(0),
-        'image' : Joi.string()
-    });
-
-    return shema.validate(method);
-}
-
-module.exports = {TravellingMethods,validateTravelMethod};
+module.exports = TravellingMethods;

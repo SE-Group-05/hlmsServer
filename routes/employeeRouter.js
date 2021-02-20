@@ -20,17 +20,14 @@ employeeRouter.route('/')
     .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
     .get(cors.cors, authenticate.verifyUser, authenticate.verifyAdmin,  employeeController.getAllEmployees)
     .post(cors.corsWithOptions,authenticate.verifyUser, authenticate.verifyAdmin, employeeController.addEmployee)
-
     .put(cors.corsWithOptions, (req, res, next) => {
         res.statusCode = 403;
         res.end('PUT operation not supported on /employees');
     })
-
     .delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin,  employeeController.deleteAllEmployees);
 employeeRouter.route('/search')
     .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
     .post(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, employeeController.getAllEmployeesByName);
-
 
 // **********************************************************************************
 // 
@@ -47,6 +44,5 @@ employeeRouter.route('/:employeeId')
     })
     .put(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin,  employeeController.updateEmployeeDetailsById)
     .delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin,  employeeController.deleteAEmployeeById);
-
 
 module.exports = employeeRouter;

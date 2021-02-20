@@ -1,9 +1,7 @@
 var mongoose = require('mongoose');
-const Joi = require('joi');
 var Schema = mongoose.Schema;
 
 var passportLocalMongoose = require('passport-local-mongoose');
-
 
 var User = new Schema({
     firstname: {
@@ -52,23 +50,8 @@ var User = new Schema({
     timestamps: true
 });
 
-
-
 User.plugin(passportLocalMongoose);
 User.index({'$**':'text'});
 var Users = mongoose.model('User', User);
 
-const validateUser = (user) =>{
-    const schema = Joi.object({
-        'firstname' : Joi.string().pattern(new RegExp('^[a-z]+(?: [a-z]+)+$')).min(3).required(),
-        'lastname' : Joi.string().pattern(new RegExp('^[a-z]+(?: [a-z]+)+$')).required(),
-        'email' : Joi.string().email().required(),
-        'role' : Joi.string().default('User'),
-        'password' : Joi.string().min(5).max(1024).required(),
-        'profilePicturePath' : Joi.string()
-    });
-
-    return schema.validate(user);
-}
-
-module.exports = {Users,validateUser};
+module.exports = Users;

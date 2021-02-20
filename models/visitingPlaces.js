@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const Joi = require('joi');
 
 const pointSchema = new Schema({
     type: {
@@ -54,31 +53,5 @@ const placeSchema = new Schema({
 
 placeSchema.index({ '$**': 'text' });
 var Places = mongoose.model('Place', placeSchema);
-
-const validatePlaces = (place) =>{
-
-    const schema = Joi.object({
-
-        'name' : Joi.string().required(),
-        'description' : Joi.string().required(),
-        'location' : Joi.string().required(),
-        'distance' : Joi.string().required(),
-        'timeToReach' : Joi.string().required(),
-        'image' : Joi.array().items(Joi.string())
-    });
-
-    return schema.validate(place);
-}
-
-const validatePoint = (point) =>{
-
-    const schema = Joi.object({
-
-        'type' : Joi.string().required().default('Point'),
-        'coordinates' : Joi.number().required()
-    });
-
-    return schema.validate(point);
-}
 
 module.exports = Places;
