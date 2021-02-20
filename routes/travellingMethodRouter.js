@@ -20,12 +20,12 @@ travellingMethodRouter.use(bodyParser.json());
 travellingMethodRouter.route('/')
     .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
     .get(cors.cors, travellingMethodController.getAllTravellingMethods)
-    .post(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, travellingMethodController.addTravellingMethod)
-    .put(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+    .post(cors.corsWithOptions, travellingMethodController.addTravellingMethod)
+    .put(cors.corsWithOptions, (req, res, next) => {
         res.statusCode = 403;
         res.end('PUT operation not supported on /travellingMethods');
     })
-    .delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, travellingMethodController.deleteAllTravellingMethods);
+    .delete(cors.corsWithOptions, travellingMethodController.deleteAllTravellingMethods);
 
 // **********************************************************************************
 // 
@@ -36,11 +36,11 @@ travellingMethodRouter.route('/')
 travellingMethodRouter.route('/:travellingMethodId')
     .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
     .get(cors.cors, travellingMethodController.getTravellingMethodDetailsById)
-    .post(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+    .post(cors.corsWithOptions, (req, res, next) => {
         res.statusCode = 403;
         res.end('POST operation not supported on /travellingMethods/' + req.params.travellingMethodId);
     })
-    .put(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, travellingMethodController.updateTravellingMethodDetailsById)
-    .delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, travellingMethodController.deleteATravellingMethodById);
+    .put(cors.corsWithOptions, travellingMethodController.updateTravellingMethodDetailsById)
+    .delete(cors.corsWithOptions, travellingMethodController.deleteATravellingMethodById);
 
 module.exports = travellingMethodRouter;

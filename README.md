@@ -31,6 +31,26 @@ A simple online hotel location management system built with MongodDB, Express.js
 3. Node.js
 4. Passport.js
 
+## Folder Structure
+
+```html
+│   app.js          # App entry point
+|   package.json    # Dependencies for the app
+|   .env            # Environment variables and configuration related stuff
+└───bin             # www file is here
+└───controllers     # Controllers for the app
+└───middleware      # Middleware of the app
+└───models          # Database models
+└───public          # Public files of the app
+└───routes          # Express routes for all the endpoints of the app
+└───services        # All the business logic is here
+└───views           # Views for the app
+```
+
+## 3 Layer architecture
+
+![3 Layer Patter for node js](./public/images/3layers.png)
+
 ## Install dependencies
 
 Open git bash or command line tools at application file and run following npm command or if you know what to do, just look at `package.json` file.
@@ -45,7 +65,7 @@ Open git bash or command line tools at application file and run following npm co
 
 - create a `.env` file in app directory
 - run `npm run dev`
-- App will open at [http://localhost:3000](http://localhost:3000)
+- App will open at [http://localhost:5000](http://localhost:5000)
 
 ## Functionalitites
 
