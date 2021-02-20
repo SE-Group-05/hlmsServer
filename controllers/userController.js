@@ -91,10 +91,8 @@ const changePassoword = (req, res, next) => {
 
 const logout = (req, res) => {
     if (req.session) {
-        req.logOut();
         req.session.destroy();
         res.clearCookie('session-id');
-        res.redirect('/');
     }
     else {
         var err = new Error('You are not logged in!');
