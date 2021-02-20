@@ -61,7 +61,6 @@ const addVisitingPlace = (req, res, next) => {
     }
     VisitingPlaces.create(place)
         .then((visitingPlace) => {
-            console.log('VisitingPlace Created ', visitingPlace);
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
             res.json({ success: true, visitingPlace: visitingPlace });

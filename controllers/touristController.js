@@ -56,18 +56,22 @@ const addTourist = async (req, res, next) => {
         role: 'user'
     }
     try {
-        const error = await TouristService.addTourist(tourist, randomPassword);
-        console.log(error);
-        if (error) {
-            res.statusCode = 500;
-            res.setHeader('Content-Type', 'application/json');
-            res.json({ success: false, message: err.message });
-        } else {
-            console.log('Tourist Created ', tourist);
-            res.statusCode = 200;
-            res.setHeader('Content-Type', 'application/json');
-            res.json({ success: true, tourist: tourist, password: randomPassword });
-        }
+        Tourists.register(new Tourists(tourist),
+            randomPassword, (err, tourist) => {
+                if (err) {
+                    throw new Error("Error while registering new user.");
+                }
+                else {
+                    tourist.save((err, tourist) => {
+                        if (err) {
+                            throw new Error("Error while registering new user.");
+                        }
+                        res.statusCode = 200;
+                        res.setHeader('Content-Type', 'application/json');
+                        res.json({ success: true, email: tourist.email, password: randomPassword });
+                    });
+                }
+            });
     } catch (error) {
         var error = new Error("Error while registering new user.");
         res.statusCode = 500;

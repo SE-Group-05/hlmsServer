@@ -1,6 +1,5 @@
 const Employees = require('../models/users');
 const utils = require('../utils/utils');
-const EmployeeService = require('../services/EmployeeService');
 
 // **********************************************************************************
 // 
@@ -32,11 +31,14 @@ const getAllEmployees = (req, res, next) => {
 
 const getAllEmployeesByName = (req, res, next) => {
     var query = { "role": "moderater" };
+    // if (req.body.similarTo) {
+    //     var searchBy = req.body.similarTo || {}
+    //     query = { "role": "moderater", $text: { $search: searchBy } }
+    // }
     if (req.body.similarTo) {
         var searchBy = req.body.similarTo || {}
-        query = { "role": "moderater", $text: { $search: searchBy } }
+        query = { "role": "moderater", firstname: { $regex: `${searchBy}`, $options: "i" } }
     }
-
     var sortby = req.body.sortBy || {};
     Employees.find(query).sort(sortby)
         .then((employees) => {
@@ -61,18 +63,22 @@ const addEmployee = async (req, res, next) => {
         role: 'moderater'
     }
     try {
-        const error = await EmployeeService.addEmployee(employee, randomPassword);
-        if (error) {
-            var err = new Error("Error while registering new user.");
-            res.statusCode = 500;
-            res.setHeader('Content-Type', 'application/json');
-            res.json({ success: false, message: err.message });
-        } else {
-            console.log('Assistant Created ', employee);
-            res.statusCode = 200;
-            res.setHeader('Content-Type', 'application/json');
-            res.json({ success: true, employee: employee, password: randomPassword });
-        }
+        Employees.register(new Employees(employee),
+            randomPassword, (err, employee) => {
+                if (err) {
+                    throw err;
+                }
+                else {
+                    employee.save((err, employee) => {
+                        if (err) {
+                            throw err;
+                        }
+                        res.statusCode = 200;
+                        res.setHeader('Content-Type', 'application/json');
+                        res.json({ success: true, email: employee.email, password: randomPassword });
+                    });
+                }
+            });
     } catch (error) {
         var err = new Error("Error while registering new user.");
         res.statusCode = 500;

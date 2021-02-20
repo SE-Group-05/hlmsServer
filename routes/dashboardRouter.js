@@ -11,6 +11,6 @@ dashboardRouter.use(bodyParser.json());
 
 dashboardRouter.route('/admin')
     .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
-    .get(cors.cors, dashboardController.getDashboard);
+    .get(cors.cors,authenticate.verifyUser, authenticate.verifyAdmin, dashboardController.getDashboard);
 
 module.exports = dashboardRouter;

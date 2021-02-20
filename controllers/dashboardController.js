@@ -61,7 +61,6 @@ exports.putUpdateAdminPassword = async (req, res, next) => {
         req.flash("success", "Your password is changed recently. Please login again to confirm");
         res.redirect("/auth/admin-login");
     } catch (err) {
-        console.log(err);
         res.redirect('back');
     }
 };

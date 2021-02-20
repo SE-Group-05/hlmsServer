@@ -19,16 +19,16 @@ touristRouter.use(bodyParser.json());
 
 touristRouter.route('/')
     .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
-    .get(cors.cors,   checkSchema(validationRules), touristController.getAllTourists)
-    .post(cors.corsWithOptions,  checkSchema(validationRules), touristController.addTourist)
+    .get(cors.cors,  authenticate.verifyUser,   touristController.getAllTourists)
+    .post(cors.corsWithOptions,  authenticate.verifyUser, authenticate.verifyModerater, touristController.addTourist)
     .put(cors.corsWithOptions, (req, res, next) => {
         res.statusCode = 403;
         res.end('PUT operation not supported on /tourists');
     })
-    .delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, checkSchema(validationRules), touristController.deleteAllTourists);
+    .delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin,  touristController.deleteAllTourists);
 touristRouter.route('/search')
     .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
-    .post(cors.corsWithOptions, authenticate.verifyUser, checkSchema(validationRules), touristController.getAllTouristsByName);
+    .post(cors.corsWithOptions, authenticate.verifyUser,  touristController.getAllTouristsByName);
 
 // **********************************************************************************
 // 
@@ -38,12 +38,12 @@ touristRouter.route('/search')
 
 touristRouter.route('/:touristId')
     .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
-    .get(cors.cors,  checkSchema(validationRules), touristController.getTouristDetailsById)
+    .get(cors.cors, authenticate.verifyUser,   touristController.getTouristDetailsById)
     .post(cors.corsWithOptions, (req, res, next) => {
         res.statusCode = 403;
         res.end('POST operation not supported on /tourists/' + req.params.touristId);
     })
-    .put(cors.corsWithOptions,  checkSchema(validationRules), touristController.updateTouristDetailsById)
-    .delete(cors.corsWithOptions,  checkSchema(validationRules), touristController.deleteATouristById);
+    .put(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyModerater,  touristController.updateTouristDetailsById)
+    .delete(cors.corsWithOptions,  authenticate.verifyUser, authenticate.verifyModerater, touristController.deleteATouristById);
 
 module.exports = touristRouter;

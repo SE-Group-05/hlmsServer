@@ -8,14 +8,12 @@ const uploadFile = async (req, res) => {
     try {
         await upload(req, res);
 
-        console.log(req.file);
         if (req.file == undefined) {
             return res.send(`You must select a file.`);
         }
 
         return res.send(`File has been uploaded.`);
     } catch (error) {
-        console.log(error);
         return res.send(`Error when trying upload image: ${error}`);
     }
 };
@@ -42,7 +40,6 @@ const UploadUserImage = async (req, res, next) => {
 
             fs.unlink(req.file.path, (err) => {
                 if (err) {
-                    console.log(err);
                 }
             })
         } else {
@@ -86,7 +83,6 @@ const uploadPlaceImage = async (req, res, next) => {
 
             fs.unlink(req.file.path, (err) => {
                 if (err) {
-                    console.log(err);
                 }
             })
         } else {

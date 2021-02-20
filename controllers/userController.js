@@ -43,8 +43,8 @@ const signupAdmin = (req, res, next) => {
 
 const login = (req, res, next) => {
     passport.authenticate('local', (err, user, info) => {
-        if (err)
-            return next(err);
+        // if (err)
+        //     return next(err);
 
         if (!user) {
             res.statusCode = 401;
@@ -58,10 +58,9 @@ const login = (req, res, next) => {
                 res.json({ success: false, status: 'Login Unsuccessful!', err: 'Could not log in user!' });
             }
             var token = authenticate.getToken({ _id: req.user._id, role: user.role });
-            var roleToken = authenticate.getToken({ role: user.role });
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
-            res.json({ success: true, status: 'Login Successful!', token: token, user: { _id: req.user._id, role: user.role } });
+            res.json({ success: true, status: 'Login Successful!', token: token, });
         });
     })(req, res, next);
 }
@@ -86,31 +85,6 @@ const changePassoword = (req, res, next) => {
         res.setHeader('Content-Type', 'application/json');
         res.json({ success: false, message: 'Error while updating Password' });
     });
-    // const username = req.user.username;
-    // const oldPassword = req.body.oldPassword;
-    // const newPassword = req.body.password;
-
-    // try {
-    //   const user = await User.findByUsername(username);
-    //   await user.changePassword(oldPassword, newPassword);
-    //   await user.save();
-
-    //   // logging activity
-    //   const activity = new Activity({
-    //     category: "Update Password",
-    //     user_id: {
-    //       id: req.user._id,
-    //       username: req.user.username,
-    //     },
-    //   });
-    //   await activity.save();
-
-    //   req.flash("success", "Your password is recently updated. Please log in again to confirm");
-    //   res.redirect("/auth/user-login");
-    // } catch (err) {
-    //   console.log(err);
-    //   return res.redirect('back');
-    // }
 }
 
 

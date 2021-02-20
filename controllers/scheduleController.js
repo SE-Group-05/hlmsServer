@@ -7,7 +7,7 @@ const Schedules = require('../models/schedules');
 // **********************************************************************************
 
 const getAllSchedules = (req, res, next) => {
-    Schedules.find(req.query)
+    Schedules.find(req.query).populate("place").populate("user")
         .then((schedules) => {
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
@@ -21,8 +21,8 @@ const getAllSchedules = (req, res, next) => {
 }
 
 const getAllSchedulesForAUser = (req, res, next) => {
-    var query = { "user": req.body.userid };
-    Schedules.find(query)
+    var query = { "user": String(req.params.userId) };
+    Schedules.find(query).populate("place")
         .then((schedules) => {
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
@@ -36,9 +36,15 @@ const getAllSchedulesForAUser = (req, res, next) => {
 }
 
 const addSchedule = (req, res, next) => {
-    Schedules.create(req.body)
+    var schedule = {
+        user: req.body.user,
+        place: req.body.place,
+        date: req.body.date,
+        state: "new",
+        travellingMethod: req.body.travellingMethod
+    }
+    Schedules.create(schedule)
         .then((schedule) => {
-            console.log('Schedule Created ', schedule);
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
             res.json({ success: true, schedule:schedule });

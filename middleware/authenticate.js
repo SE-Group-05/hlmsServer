@@ -22,7 +22,6 @@ opts.secretOrKey = process.env.secretKey;
 
 exports.jwtPassport = passport.use(new JwtStrategy(opts,
     (jwt_payload, done) => {
-        console.log("JWT payload: ", jwt_payload);
         User.findOne({ _id: jwt_payload._id }, (err, user) => {
             if (err) {
                 return done(err, false);
@@ -40,7 +39,6 @@ exports.verifyUser = passport.authenticate('jwt', { session: false });
 
 exports.verifyAdmin = (req, res, next) => {
     if (req.user.role == 'admin') {
-        console.log('Congrats! You are an admin');
         return next();
     }
     else if (req.user.role != 'admin') {
@@ -57,7 +55,6 @@ exports.verifyAdmin = (req, res, next) => {
 
 exports.verifyModerater = (req, res, next) => {
     if (req.user.role != 'user') {
-        console.log('Congrats! You are an Moderater');
         return next();
     }
     else if (req.user.role == 'user') {

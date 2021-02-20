@@ -19,7 +19,6 @@ const getAllTravellingMethods = (req, res, next) => {
 const addTravellingMethod = (req, res, next) => {
     TravellingMethods.create(req.body)
         .then((travellingMethod) => {
-            console.log('TravellingMethod Created ', travellingMethod);
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
             res.json(travellingMethod);

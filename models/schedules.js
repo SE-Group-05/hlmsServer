@@ -17,7 +17,6 @@ const scheduleSchema = new Schema({
     },
     fair: {
         type: Currency,
-        required: true,
         min: 0
     },
     state: {
@@ -27,6 +26,7 @@ const scheduleSchema = new Schema({
     },
     travellingMethod: {
         type: String,
+        required: true,
         enum: ['Bus', 'Car', 'Train', 'Threewheeler', 'Foot']
     }
 }, {

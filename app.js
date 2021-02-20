@@ -51,7 +51,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 const url = process.env.mongoUrl;
 
 mongoose.connect(url, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true  }).then((db) => {
-  }, (err) => { console.log(err); });;
+  }, (err) => {});;
 const connection = mongoose.connection; 
 connection.once('open', () => {
   console.log("MongoDB database connection established successfully");
