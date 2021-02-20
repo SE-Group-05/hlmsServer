@@ -19,7 +19,7 @@ const signupAdmin = (req, res, next) => {
             if (err) {
                 res.statusCode = 500;
                 res.setHeader('Content-Type', 'application/json');
-                res.json({ success: false, status: 'Registration Successful!' });
+                res.json({ success: false, status: 'Registration Unsuccessful!' });
             }
             else {
                 if (req.body.firstname)
@@ -30,7 +30,7 @@ const signupAdmin = (req, res, next) => {
                     if (err) {
                         res.statusCode = 500;
                         res.setHeader('Content-Type', 'application/json');
-                        res.json({ success: false, status: 'Registration uccessful!' });
+                        res.json({ success: false, status: 'Registration unsuccessful!' });
                         return;
                     }
                     res.statusCode = 200;
