@@ -12,25 +12,14 @@ var passport = require('passport');
 const mongoose = require('mongoose');
 require('dotenv').config()
 
-var indexRouter = require('./routes/index');
 var userRouter = require('./routes/userRouter');
 var employeeRouter = require('./routes/employeeRouter');
 var placeRouter = require('./routes/placeRouter');
 var scheduleRouter = require('./routes/scheduleRouter');
 var touristRouter = require('./routes/touristRouter');
 var dashboardRouter = require('./routes/dashboardRouter');
-var travellingMethodsRouter = require('./routes/travellingMethodRouter');
 
 var app = express();
-
-// app.all('*', (req, res, next) => {
-//   if (req.secure) {
-//     return next();
-//   }
-//   else {
-//     res.redirect(307, 'https://' + req.hostname + ':' + app.get('secPort') + req.url);
-//   }
-// });
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -41,20 +30,24 @@ app.use(passport.initialize());
 app.use(bodyParser.json());
 
 app.use(cookieParser('the-immortal-coils'));
-app.use(logger('dev'));
+// app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 // app.use(express.static('build'));
 app.use(express.static(path.join(__dirname, 'build')));
 
-const url = process.env.mongoUrl;
-
-mongoose.connect(url, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true  }).then((db) => {
-  }, (err) => {});;
-const connection = mongoose.connection; 
+var url = process.env.mongoUrl;
+if (process.env.NODE_ENV === 'test') {
+  url = process.env.testMongoUrl;
+}
+mongoose.connect(url, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true }).then((db) => {
+}, (err) => {
+  // console.log("MongoDB database connection establishment failed!!")
+});;
+const connection = mongoose.connection;
 connection.once('open', () => {
-  console.log("MongoDB database connection established successfully");
+  // console.log("MongoDB database connection established successfully");
 });
 
 app.use('/users', userRouter);
@@ -63,7 +56,6 @@ app.use('/places', placeRouter);
 app.use('/schedules', scheduleRouter);
 app.use('/tourists', touristRouter);
 app.use('/dashboard', dashboardRouter);
-app.use('/travellingMethods', travellingMethodsRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

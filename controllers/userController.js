@@ -50,12 +50,14 @@ const login = (req, res, next) => {
             res.statusCode = 401;
             res.setHeader('Content-Type', 'application/json');
             res.json({ success: false, status: 'Login Unsuccessful!', err: info });
+            return next(err);
         }
         req.logIn(user, (err) => {
             if (err) {
                 res.statusCode = 401;
                 res.setHeader('Content-Type', 'application/json');
                 res.json({ success: false, status: 'Login Unsuccessful!', err: 'Could not log in user!' });
+                return next(err);
             }
             var token = authenticate.getToken({ _id: req.user._id, role: user.role });
             res.statusCode = 200;
