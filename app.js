@@ -43,11 +43,11 @@ if (process.env.NODE_ENV === 'test') {
 }
 mongoose.connect(url, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true }).then((db) => {
 }, (err) => {
-  // console.log("MongoDB database connection establishment failed!!")
-});;
-const connection = mongoose.connection;
-connection.once('open', () => {
-  // console.log("MongoDB database connection established successfully");
+  if (err) {
+    console.log('👺  Error connecting to MongoDB');
+  } else {
+    console.log('✅  Connected to MongoDB');
+  }
 });
 
 app.use('/users', userRouter);

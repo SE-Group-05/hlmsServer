@@ -1,6 +1,5 @@
 const Tourists = require('../models/users');
 const utils = require('../utils/utils');
-const TouristService = require('../services/touristService');
 
 // **********************************************************************************
 // 

@@ -14,19 +14,13 @@ const getAllVisitingPlaces = (req, res, next) => {
             res.setHeader('Content-Type', 'application/json');
             res.json({ success: true, visitingPlaces: visitingPlaces });
         }, (err) => next(err))
-        .catch((err) => {
-            res.statusCode = 500;
-            res.setHeader('Content-Type', 'application/json');
-            res.json({ success: false, message: 'Error while getting data' });
-        });
+        .catch((err) => next(err));
 }
 
 const getAllVisitingPlacesByName = (req, res, next) => {
     var query = {};
     if (req.body.similarTo) {
-        var searchBy = req.body.similarTo || {}
-        // query = { $text: { $search: searchBy } }
-        query={ name: { $regex: `${searchBy}`, $options: "i" } }
+        query = { name: { $regex: `${req.body.similarTo}`, $options: "i" } }
     }
     VisitingPlaces.find(query, 'name description distance location timeToReach image travellingMethods')
         .then((visitingPlaces) => {
@@ -34,11 +28,7 @@ const getAllVisitingPlacesByName = (req, res, next) => {
             res.setHeader('Content-Type', 'application/json');
             res.json({ success: true, visitingPlaces: visitingPlaces });
         }, (err) => next(err))
-        .catch((err) => {
-            res.statusCode = 500;
-            res.setHeader('Content-Type', 'application/json');
-            res.json({ success: false, message: 'Error while getting data' });
-        });
+        .catch((err) => next(err));
 }
 
 const addVisitingPlace = (req, res, next) => {
@@ -65,15 +55,12 @@ const addVisitingPlace = (req, res, next) => {
             res.setHeader('Content-Type', 'application/json');
             res.json({ success: true, visitingPlace: visitingPlace });
         }, (err) => {
-            res.statusCode = 200;
+            res.statusCode = 403;
             res.setHeader('Content-Type', 'application/json');
-            res.json({ success: false, message: "Duplicate Key" });
+            const msg = err.driver ? "Duplicate Key" : err._message;
+            res.json({ success: false, message: msg });
         })
-        .catch((err) => {
-            res.statusCode = 200;
-            res.setHeader('Content-Type', 'application/json');
-            res.json({ success: false, message: "Duplicate Key" });
-        });
+        .catch((err) => next(err));
 }
 
 const deleteAllVisitingPlaces = (req, res, next) => {
@@ -103,12 +90,12 @@ const getVisitingPlaceDetailsById = (req, res, next) => {
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
             res.json({ success: true, visitingPlace: visitingPlace });
-        }, (err) => next(err))
-        .catch((err) => {
-            res.statusCode = 200;
+        }, (err) => {
+            res.statusCode = 404;
             res.setHeader('Content-Type', 'application/json');
             res.json({ success: false, message: "Could not find the place" });
-        });
+        })
+        .catch((err) => next(err));
 }
 
 const updateVisitingPlaceDetailsById = (req, res, next) => {
@@ -120,11 +107,7 @@ const updateVisitingPlaceDetailsById = (req, res, next) => {
             res.setHeader('Content-Type', 'application/json');
             res.json({ success: true, visitingPlace: visitingPlace });
         }, (err) => next(err))
-        .catch((err) => {
-            res.statusCode = 200;
-            res.setHeader('Content-Type', 'application/json');
-            res.json({ success: false, message: "Update failed" });
-        });
+        .catch((err) => next(err));
 }
 
 const deleteAVisitingPlaceById = (req, res, next) => {
@@ -134,11 +117,7 @@ const deleteAVisitingPlaceById = (req, res, next) => {
             res.setHeader('Content-Type', 'application/json');
             res.json({ success: true, response: resp });
         }, (err) => next(err))
-        .catch((err) => {
-            res.statusCode = 200;
-            res.setHeader('Content-Type', 'application/json');
-            res.json({ success: false, message: "Delete failed" });
-        });
+        .catch((err) => next(err));
 }
 
 exports.getVisitingPlaceDetailsById = getVisitingPlaceDetailsById;

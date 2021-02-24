@@ -32,17 +32,6 @@ const places = [
         "images": [],
         "methods": ['Foot']
     },
-    {
-        "name": "Galle Dutch Fort",
-        "description": "Duis amet in ipsum ut consequat. Aliquip quis quis et laboris non mollit nisi ut mollit fugiat occaecat id nostrud. Mollit mollit aliquip reprehenderit voluptate commodo id nostrud non.",
-        "location": {
-            coordinates: [6.02453869574481, 80.21798550785017]
-        },
-        "distance": "20km",
-        "timeToReach": "30min",
-        "images": [],
-        "methods": ['Car']
-    },
 ];
 
 module.exports = places;

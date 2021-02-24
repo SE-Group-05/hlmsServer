@@ -42,25 +42,7 @@ exports.getDashboard = async (req, res, next) => {
             }
         });
     } catch (err) {
-        res.statusCode = 500;
-        res.setHeader('Content-Type', 'application/json');
-        res.json({ success: false, message: 'Error while getting data' });
+        next(err);
     }
 }
 
-exports.putUpdateAdminPassword = async (req, res, next) => {
-    try {
-        const user_id = req.user._id;
-        const old_password = req.body.oldPassword;
-        const new_password = req.body.password;
-
-        const admin = await User.findById(user_id);
-        await admin.changePassword(old_password, new_password);
-        await admin.save();
-
-        req.flash("success", "Your password is changed recently. Please login again to confirm");
-        res.redirect("/auth/admin-login");
-    } catch (err) {
-        res.redirect('back');
-    }
-};

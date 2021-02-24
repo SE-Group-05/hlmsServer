@@ -23,6 +23,4 @@ userRouter.post("/updateprofilepicture/:id",authenticate.verifyUser, upload.Uplo
 
 userRouter.get('/logout',authenticate.verifyUser, userController.logout);
 
-userRouter.get('/checkJWTtoken', cors.corsWithOptions, userController.checkJWTtoken);
-
 module.exports = userRouter;

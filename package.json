@@ -6,6 +6,7 @@
     "start": "cross-env NODE_ENV=production node ./bin/www",
     "dev": "cross-env NODE_ENV=development nodemon ./bin/www",
     "test": "cross-env NODE_ENV=test jest --verbose --runInBand --detectOpenHandles --forceExit",
+    "test-coverage": "jest --coverage",
     "build:ui": "rm -rf build && cd ../hlms-frontend/ && npm run build --prod && cp -r build ../hlmsServer/",
     "deploy": "git push heroku main",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && npm run deploy",
@@ -42,6 +43,7 @@
     "cross-env": "^7.0.3",
     "jasmine": "^3.6.3",
     "jest": "^26.6.3",
+    "jest-html-reporters": "^2.1.2",
     "mocha": "^8.3.0",
     "nodemon": "^2.0.6",
     "supertest": "^6.1.3"
