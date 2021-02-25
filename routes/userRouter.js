@@ -2,7 +2,6 @@ var express = require('express');
 var userRouter = express.Router();
 
 const bodyParser = require('body-parser');
-var upload = require('../controllers/upload');
 const { checkSchema } = require('express-validator');
 var authenticate = require('../middleware/authenticate');
 var validationRules = require('../middleware/validation');
@@ -18,9 +17,5 @@ userRouter.post('/signup/admin', cors.corsWithOptions, userController.signupAdmi
 userRouter.post('/login', cors.corsWithOptions, userController.login);
 
 userRouter.post('/changepassoword/:id',authenticate.verifyUser, userController.changePassoword);
-
-userRouter.post("/updateprofilepicture/:id",authenticate.verifyUser, upload.UploadUserImage);
-
-userRouter.get('/logout',authenticate.verifyUser, userController.logout);
 
 module.exports = userRouter;

@@ -1,6 +1,6 @@
 const app = require('../../app');
 const server = require("supertest")(app);
-const expect = require("chai").expect;
+const jwt_decode = require('jwt-decode');
 const Users = require('../../models/users');
 
 var userToken;
@@ -16,6 +16,11 @@ const assistant = {
     "firstname": "Dinesh",
     "lastname": "Chandimal",
     "email": "dineshchandimal@gmail.com"
+};
+const tourist = {
+    "firstname": "Sunil",
+    "lastname": "Fernamdo",
+    "email": "sunilFernamdo@gmail.com"
 };
 const signupAdmin = async () => {
     await Users.deleteMany({});
@@ -41,6 +46,9 @@ const getAdminToken = async () => {
 }
 
 const addAssistant = async () => {
+    if (!adminToken) {
+        await getAdminToken();
+    }
     const response = await server
         .post("/employees")
         .set("Authorization", `Bearer ${adminToken}`)
@@ -53,10 +61,7 @@ const getAssistantToken = async () => {
     if (assistantToken) {
         return assistantToken;
     }
-    if (!adminToken){
-        await getAdminToken();
-    }
-    const password = await addAssistant()
+    const password = await addAssistant();
     var creds = {
         username: assistant.email,
         password: password,
@@ -68,7 +73,39 @@ const getAssistantToken = async () => {
     return assistantToken;
 }
 
+const addTourist = async () => {
+    if (!assistantToken) {
+        await getAssistantToken();
+    }
+    const response = await server
+        .post("/tourists")
+        .set("Authorization", `Bearer ${assistantToken}`)
+        .send(tourist)
+        .expect(200);
+    return response.body.password;
+};
+
+const getTouristToken = async () => {
+    if (userToken) {
+        return userToken;
+    }
+    const password = await addTourist();
+    var creds = {
+        username: tourist.email,
+        password: password,
+    };
+    const response = await server
+        .post("/users/login")
+        .send(creds);
+    userToken = response.body.token;
+    return userToken;
+}
+
+const decodeToken = (token) => {
+    var decoded = jwt_decode(token);
+    return decoded;
+}
 
 module.exports = {
-    getAdminToken, getAssistantToken
+    getAdminToken, getAssistantToken, getTouristToken, decodeToken
 }

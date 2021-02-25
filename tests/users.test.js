@@ -1,12 +1,20 @@
 const app = require('../app');
 const server = require("supertest")(app);
 const expect = require("chai").expect;
+const assert = require('chai').assert;
 const Users = require('../models/users');
+const { decodeToken } = require('./helpers/user_helper');
 
 var adminToken;
 
 beforeAll(async () => {
     await Users.deleteMany({});
+});
+
+describe('User Model', () => {
+    it('User model exists', () => {
+        assert.notEqual(Users, undefined, 'User should not be undefined')
+    })
 });
 
 describe("Admin SignUp & Login", () => {
@@ -54,6 +62,7 @@ describe("Admin SignUp & Login", () => {
         const receivedData = response.body;
         expect(receivedData.success).to.eql(true);
         expect(receivedData.status).to.eql('Login Successful!');
+        adminToken = receivedData.token;
         done();
     });
 });
@@ -115,3 +124,24 @@ describe("User Login", () => {
         done();
     });
 });
+
+describe('Change Password', () => {
+    it("requires Authorization - 401", async (done) => {
+        var id = decodeToken(adminToken)._id;
+        const route = `/users/changepassoword/${id}`;
+        const response = await server
+            .post(route);
+        expect(response.status).to.eql(401);
+        done();
+    });
+    it("with Authorization - 200", async (done) => {
+        var id = decodeToken(adminToken)._id;
+        const route = `/users/changepassoword/${id}`;
+        const response = await server
+            .post(route)
+            .send({newPassword:"newPassword"})
+            .set("Authorization", `Bearer ${adminToken}`);
+        expect(response.status).to.eql(200);
+        done();
+    });
+})
