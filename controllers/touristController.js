@@ -58,12 +58,16 @@ const addTourist = async (req, res, next) => {
         Tourists.register(new Tourists(tourist),
             randomPassword, (err, tourist) => {
                 if (err) {
-                    throw new Error("Error while registering new user.");
+                    res.statusCode = 403;
+                    res.setHeader('Content-Type', 'application/json');
+                    res.json({ success: false, message: err.message });
                 }
                 else {
                     tourist.save((err, tourist) => {
                         if (err) {
-                            throw new Error("Error while registering new user.");
+                            res.statusCode = 500;
+                            res.setHeader('Content-Type', 'application/json');
+                             res.json({ success: false, message: 'Error while Saving new user.' });
                         }
                         res.statusCode = 200;
                         res.setHeader('Content-Type', 'application/json');
@@ -107,35 +111,29 @@ const getTouristDetailsById = (req, res, next) => {
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
             res.json({ success: true, tourist: tourist });
-        }, (err) => next(err))
-        .catch((err) => {
-            res.statusCode = 200;
+        }, (err) => {
+            res.statusCode = 404;
             res.setHeader('Content-Type', 'application/json');
-            res.json({ success: false, message: 'Error while getting data' });
-        });
+            res.json({ success: false, message: 'Could not find tourist with given ID' });
+        })
+        .catch((err) => next(err)); 
 }
 
 const updateTouristDetailsById = (req, res, next) => {
-    var tourist = {
-        username: req.body.email,
-        firstname: req.body.firstname,
-        lastname: req.body.lastname,
-        email: req.body.email,
-        role: 'user'
-    }
+    
     Tourists.findByIdAndUpdate(req.params.touristId, {
-        $set: tourist
+        $set: req.body
     }, { new: true })
         .then((tourist) => {
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
             res.json({ success: true, tourist: tourist });
-        }, (err) => next(err))
-        .catch((err) => {
-            res.statusCode = 200;
+        }, (err) =>  {
+            res.statusCode = 404;
             res.setHeader('Content-Type', 'application/json');
-            res.json({ success: false, message: 'Error while updating data' });
-        });
+            res.json({ success: false, message: 'Could not find tourist with given ID' });
+        })
+        .catch((err) => next(err));
 }
 
 const deleteATouristById = (req, res, next) => {
@@ -146,7 +144,7 @@ const deleteATouristById = (req, res, next) => {
             res.json({ success: true, response: resp });
         }, (err) => next(err))
         .catch((err) => {
-            res.statusCode = 200;
+            res.statusCode = 500;
             res.setHeader('Content-Type', 'application/json');
             res.json({ success: false, message: 'Error while deleting data' });
         });
