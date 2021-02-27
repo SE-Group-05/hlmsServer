@@ -41,7 +41,7 @@ describe("GET /schedule/:visitingPlaceId", () => {
         expect(receivedData.schedules[0].travellingMethod).to.eql("Bus");
         done();
     });
-    it("invalid place id - 404", async (done) => {
+    it("invalid user id - 404", async (done) => {
         const invalidId = '5a3d5da59070081a82a3445';
         const response = await server
             .get(`/schedules/user/${invalidId}`)

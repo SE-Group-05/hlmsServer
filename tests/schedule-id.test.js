@@ -21,7 +21,7 @@ beforeAll(async () => {
     api = `/schedules/${existingId}`;
 });
 
-describe("GET /schedule/:visitingPlaceId", () => {
+describe("GET /schedule/:scheduleId", () => {
     it("requires Authorization - 401", async (done) => {
         const response = await server
             .get(api);
@@ -40,7 +40,7 @@ describe("GET /schedule/:visitingPlaceId", () => {
         expect(receivedData.schedule.travellingMethod).to.eql("Car");
         done();
     });
-    it("invalid place id - 404", async (done) => {
+    it("invalid schedule id - 404", async (done) => {
         const invalidId = '5a3d5da59070081a82a3445';
         const response = await server
             .get(`/schedules/${invalidId}`)
@@ -53,7 +53,7 @@ describe("GET /schedule/:visitingPlaceId", () => {
     });
 });
 
-describe("POST /schedules/:visitingPlaceId", () => {
+describe("POST /schedules/:scheduleId", () => {
     it("does not support - 403", async (done) => {
         const response = await server
             .post(api)
@@ -63,7 +63,7 @@ describe("POST /schedules/:visitingPlaceId", () => {
     });
 });
 
-describe("PUT /schedules/:visitingPlaceId", () => {
+describe("PUT /schedules/:scheduleId", () => {
     it("requires Authorization - 401", async (done) => {
         const response = await server
             .put(api);
@@ -89,7 +89,7 @@ describe("PUT /schedules/:visitingPlaceId", () => {
     });
 });
 
-describe("DELETE /places/:visitingPlaceId", () => {
+describe("DELETE /schedule/:scheduleId", () => {
     it("requires Authorization - 401", async (done) => {
         const response = await server
             .delete(api);

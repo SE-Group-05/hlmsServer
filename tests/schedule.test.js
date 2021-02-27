@@ -21,8 +21,8 @@ beforeAll(async () => {
   touristToken = await getTouristToken();
 });
 
-describe('Place Model', () => {
-  it('Place model exists', () => {
+describe('Schedule Model', () => {
+  it('Schedule model exists', () => {
     assert.notEqual(Schedules, undefined, 'Place should not be undefined')
   })
 })
@@ -105,7 +105,7 @@ describe("POST /schedules", () => {
   });
 });
 
-describe("PUT /places", () => {
+describe("PUT /schedule", () => {
   it("does not support - 403", async (done) => {
     const response = await server
       .put(api)
@@ -117,7 +117,7 @@ describe("PUT /places", () => {
 
 
 
-describe("DELETE /places", () => {
+describe("DELETE /schedule", () => {
   it("requires Authorization - 401", async (done) => {
     const response = await server
       .delete(api);

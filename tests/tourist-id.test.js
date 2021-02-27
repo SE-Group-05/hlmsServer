@@ -61,7 +61,7 @@ describe("POST /tourists/:touristsId", () => {
     });
 });
 
-describe("PUT /tourists/:visitingPlaceId", () => {
+describe("PUT /tourists/:touristId", () => {
     it("requires Authorization - 401", async (done) => {
         const response = await server
             .put(api);
@@ -89,7 +89,7 @@ describe("PUT /tourists/:visitingPlaceId", () => {
     });
 });
 
-describe("DELETE /tourists/:visitingPlaceId", () => {
+describe("DELETE /tourists/:touristeId", () => {
     it("requires Authorization - 401", async (done) => {
         const response = await server
             .delete(api);
