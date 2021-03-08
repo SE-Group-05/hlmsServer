@@ -55,6 +55,7 @@ const login = (req, res, next) => {
 
 const changePassoword = (req, res, next) => {
     var userId = req.params.id;
+    var newPasswordString = req.body.password;
     Users.findById(userId).then(function (sanitizedUser) {
         if (sanitizedUser) {
             sanitizedUser.setPassword(newPasswordString, function () {
@@ -64,14 +65,12 @@ const changePassoword = (req, res, next) => {
                 res.json({ success: true, message: 'password reset successful' });
             });
         } else {
-            res.statusCode = 200;
+            res.statusCode = 404;
             res.setHeader('Content-Type', 'application/json');
             res.json({ success: false, message: 'This user does not exist' });
         }
     }, function (err) {
-        res.statusCode = 200;
-        res.setHeader('Content-Type', 'application/json');
-        res.json({ success: false, message: 'Error while updating Password' });
+        next(err);
     });
 }
 

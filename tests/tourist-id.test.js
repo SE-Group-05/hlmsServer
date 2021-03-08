@@ -69,6 +69,24 @@ describe("PUT /tourists/:touristId", () => {
         done();
     });
 
+    it("Invalid Id - 404", async (done) => {
+        const invalidId = '5a3d5da59070081a82a3445';
+        const response = await server
+            .put(`/tourists/${invalidId}`)
+            .set("Authorization", `Bearer ${adminToken}`)
+            .send({
+                "mobile": "988784844",
+                "rommnumber" : "4",
+            })
+            .expect(404)
+            .expect('Content-Type', /application\/json/);
+        expect(response.status).to.eql(404);
+        const receivedData = response.body;
+        expect(receivedData.success).to.eql(false);
+        expect(receivedData.message).to.eql('Could not find tourist with given ID');
+        done();
+    });
+
     it("with Authorization - 200", async (done) => {
         const response = await server
             .put(api)

@@ -22,6 +22,7 @@ const UploadUserImage = async (req, res, next) => {
     try {
         const user_id = req.params._id;
         const user = await Users.findById(user_id);
+        console.log(req);
 
         let imageUrl;
         if (req.file) {
@@ -50,12 +51,12 @@ const UploadUserImage = async (req, res, next) => {
         await user.save();
 
 
-        res.statusCode = 500;
+        res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
         res.json({ success: true, message: 'Successfully updated profile picture' });
 
     } catch (err) {
-        res.statusCode = 200;
+        res.statusCode = 500;
         res.setHeader('Content-Type', 'application/json');
         res.json({ success: false, message: 'Error while updating profile picture' });
     }
@@ -64,7 +65,7 @@ const UploadUserImage = async (req, res, next) => {
 const uploadPlaceImage = async (req, res, next) => {
     try {
         const place_id = req.params._id;
-        const user = await Places.findById(place_id);
+        const place = await Places.findById(place_id);
 
         let imageUrl;
         if (req.file) {

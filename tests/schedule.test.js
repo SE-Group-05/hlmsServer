@@ -23,7 +23,7 @@ beforeAll(async () => {
 
 describe('Schedule Model', () => {
   it('Schedule model exists', () => {
-    assert.notEqual(Schedules, undefined, 'Place should not be undefined')
+    assert.notEqual(Schedules, undefined, 'Schedule should not be undefined')
   })
 })
 
