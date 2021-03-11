@@ -3,13 +3,10 @@ const server = require("supertest")(app);
 const expect = require("chai").expect;
 const assert = require('chai').assert;
 const Users = require('../models/users');
-const {getAssistantToken,getExistingIdAssistanct,getNonExistingId} = require('../tests/helpers/user_helper');
+const {getExistingIdAssistanct,decodeToken} = require('../tests/helpers/user_helper');
 
 var adminToken;
-var adminToken1;
-var api;
 var id;
-var invalidId 
 
 beforeAll(async () => {
     await Users.deleteMany({});
