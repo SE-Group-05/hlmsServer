@@ -1,21 +1,28 @@
 const app = require('../app');
 const server = require("supertest")(app);
+const sinon = require("sinon");
 const expect = require("chai").expect;
 const assert = require('chai').assert;
 const Tourist = require("../models/users");
+const {getAllTourists,mQuery} = require('../controllers/touristController') ;
 const { getAdminToken, getAssistantToken ,addTourist, getTouristToken} = require('./helpers/user_helper');
+const { stub } = require('sinon');
 
 const api = "/tourists";
 
 var adminToken;
 var assistantToken;
+var touristToken;
 
 beforeAll(async () => {
   await Tourist.deleteMany({});
   await addTourist();
   adminToken = await getAdminToken();
   assistantToken = await getAssistantToken();
+  touristToken = await getTouristToken();
 });
+
+
 
 describe('Tourist Model', () => {
     it('Tourist model exists', () => {
@@ -30,6 +37,9 @@ describe("GET /tourists", () => {
     expect(response.status).to.eql(401);
     done();
   });
+
+ 
+  
   it("with Authorization - 200", async (done) => {
     const response = await server
       .get(api)
@@ -42,9 +52,23 @@ describe("GET /tourists", () => {
     expect(receivedData.tourists.length).to.eql(1);
     done();
   });
+
+  it("server error - 500", async (done) => {
+    var  stub = sinon.stub(Tourist,'find');
+    stub.rejects();
+    const response = await server
+      .get(api)
+      .set("Authorization", `Bearer ${touristToken}`)
+      .expect("Content-Type", "text/html; charset=utf-8")
+    expect(response.status).to.eql(500);
+    stub.restore();
+    done();
+  });
 });
 
 describe("POST /tourists", () => {
+  
+
   const nonValidTourist = {
     "firstname": "test user",
     "lastname": "usersurname",
@@ -59,6 +83,15 @@ describe("POST /tourists", () => {
       .post(api)
       .send({});
     expect(response.status).to.eql(401);
+    done();
+  });
+
+  it("with invalid Authorization - 403", async (done) => {
+    await server
+      .post(api)
+      .set("Authorization", `Bearer ${touristToken}`)
+      .send(newTourist)
+      .expect(403);
     done();
   });
 
@@ -84,15 +117,7 @@ describe("POST /tourists", () => {
     done();
   });
 
-  it("with invalid Authorization - 403", async (done) => {
-    await server
-      .post(api)
-      .set("Authorization", `Bearer ${assistantToken}`)
-      .send(newTourist)
-      .expect(403);
-    done();
-  });
-
+ 
   it("already existing - 403", async (done) => {
     const response = await server
       .post(api)
@@ -120,6 +145,8 @@ describe("POST /tourists", () => {
     expect(receivedData.message).to.eql("No username was given");
     done();
   });
+
+  
 
   describe("POST /tourists/search", () => {
     it("requires Authorization - 401", async (done) => {
@@ -150,6 +177,7 @@ describe("POST /tourists", () => {
     it("with Authorization - another one - 200", async (done) => {
       const response = await server
         .post("/tourists/search")
+        .send({})
         .set("Authorization", `Bearer ${adminToken}`)
         .expect(200)
         .expect('Content-Type', /application\/json/);

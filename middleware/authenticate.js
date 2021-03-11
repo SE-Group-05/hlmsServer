@@ -62,9 +62,4 @@ exports.verifyModerater = (req, res, next) => {
         err.status = 403;
         return next(err);
     }
-    else {
-        err = new Error('Moderater Verification Failed!');
-        err.status = 500;
-        return next(err);
-    }
 }
