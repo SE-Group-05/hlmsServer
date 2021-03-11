@@ -22,7 +22,7 @@ beforeAll(async () => {
 });
 
 
-describe("GET /schedule/:visitingPlaceId", () => {
+describe("GET /schedule/:userId", () => {
     it("requires Authorization - 401", async (done) => {
         const response = await server
             .get(api);

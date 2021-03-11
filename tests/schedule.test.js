@@ -100,7 +100,7 @@ describe("POST /schedules", () => {
     expect(response.status).to.eql(403);
     const receivedData = response.body;
     expect(receivedData.success).to.eql(false);
-    expect(receivedData.message).to.eql("Schedule validation failed");
+    expect(receivedData.message).to.eql("Schedule validation failed: date: Path `date` is required.");
     done();
   });
 });

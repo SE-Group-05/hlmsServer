@@ -91,10 +91,9 @@ describe("POST /places", () => {
   });
 
   it("with invalid Authorization - 403", async (done) => {
-    const response = await server
+    await server
       .post(api)
-      .set("Authorization", `Bearer ${adminToken}`)
-      .send(newPlace)
+      .set("Authorization", `Bearer ${assistantToken}`)
       .expect(403);
     done();
   });

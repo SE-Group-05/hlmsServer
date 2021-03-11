@@ -57,36 +57,19 @@ const changePassoword = (req, res, next) => {
     var userId = req.params.id;
     Users.findById(userId).then(function (sanitizedUser) {
         if (sanitizedUser) {
-            sanitizedUser.setPassword(newPasswordString, function () {
+            sanitizedUser.setPassword(req.body.newPassword, function () {
                 sanitizedUser.save();
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
-                res.json({ success: true, message: 'password reset successful' });
+                res.json({ success: true, message: 'Password reset successful' });
             });
         } else {
-            res.statusCode = 200;
+            res.statusCode = 403;
             res.setHeader('Content-Type', 'application/json');
             res.json({ success: false, message: 'This user does not exist' });
         }
-    }, function (err) {
-        res.statusCode = 200;
-        res.setHeader('Content-Type', 'application/json');
-        res.json({ success: false, message: 'Error while updating Password' });
-    });
+    }, (err) => next(err));
 }
-
-const logout = (req, res) => {
-    if (req.session) {
-        req.session.destroy();
-        res.clearCookie('session-id');
-    }
-    else {
-        var err = new Error('You are not logged in!');
-        err.status = 403;
-    }
-}
-
 exports.signupAdmin = signupAdmin;
 exports.login = login;
-exports.logout = logout;
 exports.changePassoword = changePassoword;

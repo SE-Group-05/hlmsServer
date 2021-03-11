@@ -21,7 +21,7 @@ const getExistingId = async () => {
         "timeToReach": "30min",
         "images": [],
         "methods": ['Car']
-    };
+    }
     const place = new Places(newPlace);
     await place.save();
 
@@ -39,7 +39,7 @@ const getNonExistingId = async () => {
         "timeToReach": "20min",
         "images": [],
         "methods": ['Foot']
-    };
+    }
     const place = new Places(newPlace);
     await place.save();
     await place.remove();
@@ -47,11 +47,6 @@ const getNonExistingId = async () => {
     return place._id.toString();
 }
 
-const placesInDb = async () => {
-    const places = await Note.find({});
-    return places;
-}
-
 module.exports = {
-    initialPlaces, addPlacesToDb, getExistingId, getNonExistingId, placesInDb
+    initialPlaces, addPlacesToDb, getExistingId, getNonExistingId
 }

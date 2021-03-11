@@ -1,33 +1,8 @@
-const multer = require('multer');
-const { v4: uuidv4 } = require('uuid');
-let path = require('path');
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'images');
-    },
-    filename: function (req, file, cb) {
-        cb(null, uuidv4() + '-' + Date.now() + path.extname(file.originalname));
-    }
-});
-
-const fileFilter = (req, file, cb) => {
-    const allowedFileTypes = ['image/jpeg', 'image/jpg', 'image/png'];
-    if (allowedFileTypes.includes(file.mimetype)) {
-        cb(null, true);
-    } else {
-        cb(null, false);
-    }
-}
-
-let upload = multer({ storage, fileFilter });
-
-exports.upload = upload;
-
 const password_generator = (len) => {
-    var length = (len) ? (len) : (10);
+    var length = (len) && (len > 10) ? (len) : (10);
     var string = "abcdefghijklmnopqrstuvwxyz"; //to upper 
     var numeric = '0123456789';
-    var punctuation = '!@#$%^&*()_+~`|}{[]\:;?><,./-=';
+    var punctuation = '!@#$%^&*()_+~`}{?><,.-=';
     var password = "";
     var character = "";
     var crunch = true;
@@ -47,3 +22,45 @@ const password_generator = (len) => {
 }
 
 exports.password_generator = password_generator;
+
+const validatePassword = (password) => {
+    if ((!password) || (password.split('').length < 10)) {
+        return {
+            isValid: false,
+            msg: "Password must have at least 10 characters"
+        }
+    }
+    var re = /[0-9]/;
+    if (!re.test(password)) {
+        return {
+            isValid: false,
+            msg: "Error: password must contain at least one number (0-9)!"
+        }
+    }
+    re = /[a-z]/;
+    if (!re.test(password)) {
+        return {
+            isValid: false,
+            msg: "Error: password must contain at least one lowercase letter (a-z)!"
+        }
+    }
+    re = /[A-Z]/;
+    if (!re.test(password)) {
+        return {
+            isValid: false,
+            msg: "Error: password must contain at least one uppercase letter (A-Z)!"
+        }
+    }
+    re = /[!@#$%^&*()_+~`}{?><,.-=]/;
+    if (!re.test(password)) {
+        return {
+            isValid: false,
+            msg: "Error: password must contain at least one special character!"
+        }
+    }
+    return {
+        isValid: true,
+        msg: "Valid password!"
+    }
+}
+exports.validatePassword = validatePassword;

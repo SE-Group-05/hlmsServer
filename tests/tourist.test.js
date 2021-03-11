@@ -72,7 +72,6 @@ describe("POST /tourists", () => {
     expect(response.status).to.eql(200);
     const receivedData = response.body;
     expect(receivedData.success).to.eql(true);
-    console.log(receivedData);
     expect(receivedData.email).to.eql("user111@gmail.com");
     const getResponse = await server
       .get(api)
