@@ -55,6 +55,7 @@ const login = (req, res, next) => {
 
 const changePassoword = (req, res, next) => {
     var userId = req.params.id;
+    var newPasswordString = req.body.password;
     Users.findById(userId).then(function (sanitizedUser) {
         if (sanitizedUser) {
             sanitizedUser.setPassword(req.body.newPassword, function () {

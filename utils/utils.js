@@ -51,7 +51,7 @@ const validatePassword = (password) => {
             msg: "Error: password must contain at least one uppercase letter (A-Z)!"
         }
     }
-    re = /[!@#$%^&*()_+~`}{?><,.-=]/;
+    re = /[!@#$%^&*()_+~`}{?><,.=-]/;
     if (!re.test(password)) {
         return {
             isValid: false,

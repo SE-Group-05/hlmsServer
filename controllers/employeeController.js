@@ -22,11 +22,7 @@ const getAllEmployees = (req, res, next) => {
             res.setHeader('Content-Type', 'application/json');
             res.json({ success: true, employees: employees });
         }, (err) => next(err))
-        .catch((err) => {
-            res.statusCode = 500;
-            res.setHeader('Content-Type', 'application/json');
-            res.json({ success: false, message: 'Error while getting data' });
-        });
+        .catch((err) => next(err));
 }
 
 const getAllEmployeesByName = (req, res, next) => {
@@ -46,11 +42,7 @@ const getAllEmployeesByName = (req, res, next) => {
             res.setHeader('Content-Type', 'application/json');
             res.json({ success: true, employees: employees });
         }, (err) => next(err))
-        .catch((err) => {
-            res.statusCode = 500;
-            res.setHeader('Content-Type', 'application/json');
-            res.json({ success: false, message: 'Error while getting data' });
-        });
+        .catch((err) => next(err));
 }
 
 const addEmployee = async (req, res, next) => {
@@ -66,12 +58,16 @@ const addEmployee = async (req, res, next) => {
         Employees.register(new Employees(employee),
             randomPassword, (err, employee) => {
                 if (err) {
-                    throw err;
+                    res.statusCode = 403;
+                    res.setHeader('Content-Type', 'application/json');
+                    res.json({ success: false, message: err.message });
                 }
                 else {
                     employee.save((err, employee) => {
                         if (err) {
-                            throw err;
+                            res.statusCode = 500;
+                            res.setHeader('Content-Type', 'application/json');
+                             res.json({ success: false, message: 'Error while Saving new user.' });
                         }
                         res.statusCode = 200;
                         res.setHeader('Content-Type', 'application/json');
@@ -114,7 +110,11 @@ const getEmployeeDetailsById = (req, res, next) => {
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
             res.json({ success: true, employee: employee });
-        }, (err) => next(err))
+        }, (err) => {
+            res.statusCode = 404;
+            res.setHeader('Content-Type', 'application/json');
+            res.json({ success: false, message: 'Could not find employee with given ID' });
+        })
         .catch((err) => next(err));
 }
 
@@ -149,12 +149,7 @@ const deleteAEmployeeById = (req, res, next) => {
             res.setHeader('Content-Type', 'application/json');
             res.json(resp);
         }, (err) => next(err))
-        .catch((err) => {
-            var err = new Error("Error while deletting.");
-            res.statusCode = 500;
-            res.setHeader('Content-Type', 'application/json');
-            res.json({ success: false, message: err.message });
-        });
+        .catch((err) => next(err));
 }
 
 exports.getEmployeeDetailsById = getEmployeeDetailsById;

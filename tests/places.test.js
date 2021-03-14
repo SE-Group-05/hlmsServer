@@ -18,6 +18,8 @@ beforeAll(async () => {
   assistantToken = await getAssistantToken();
 });
 
+
+
 describe('Place Model', () => {
   it('Place model exists', () => {
     assert.notEqual(Places, undefined, 'Place should not be undefined')
@@ -46,6 +48,10 @@ describe("GET /places", () => {
 });
 
 describe("POST /places", () => {
+  beforeAll(async () => {
+    await Places.deleteMany({});
+  });
+
   const nonValidPlace = {
     "description": "Duis amet in ipsum ut consequat. Aliquip quis quis et laboris non mollit nisi ut mollit fugiat occaecat id nostrud. Mollit mollit aliquip reprehenderit voluptate commodo id nostrud non.",
     "location": {
@@ -68,6 +74,15 @@ describe("POST /places", () => {
     done();
   });
 
+  it("with invalid Authorization - 403", async (done) => {
+    const response = await server
+      .post(api)
+      .set("Authorization", `Bearer ${assistantToken}`)
+      .send(newPlace)
+      .expect(403);
+    done();
+  });
+
   it("with Authorization - 200", async (done) => {
     const response = await server
       .post(api)
@@ -86,7 +101,7 @@ describe("POST /places", () => {
       .expect('Content-Type', /application\/json/);
     expect(getResponse.status).to.eql(200);
     expect(getResponse.body.success).to.eql(true);
-    expect(getResponse.body.visitingPlaces.length).to.eql(4);
+    expect(getResponse.body.visitingPlaces.length).to.eql(1);
     done();
   });
 
@@ -172,7 +187,7 @@ describe("POST /places/search", () => {
     expect(response.status).to.eql(200);
     const receivedData = response.body;
     expect(receivedData.success).to.eql(true);
-    expect(receivedData.visitingPlaces.length).to.eql(4);
+    expect(receivedData.visitingPlaces.length).to.eql(1);
     done();
   });
 });

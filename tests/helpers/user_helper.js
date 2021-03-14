@@ -6,6 +6,9 @@ const Users = require('../../models/users');
 var userToken;
 var assistantToken;
 var adminToken;
+var passwordAssistant;
+var passwordUser;
+
 const admin = {
     "firstname": "Admin",
     "lastname": "Admin",
@@ -13,15 +16,16 @@ const admin = {
     "password": "admin-password"
 };
 const assistant = {
-    "firstname": "Dinesh",
-    "lastname": "Chandimal",
-    "email": "dineshchandimal@gmail.com"
+    "firstname": "Pasan",
+    "lastname": "Fernamdo",
+    "email": "pasanFernamdo@gmail.com"
 };
 const tourist = {
     "firstname": "Sunil",
     "lastname": "Fernamdo",
     "email": "sunilFernamdo@gmail.com"
 };
+
 const signupAdmin = async () => {
     await Users.deleteMany({});
     await server
@@ -54,17 +58,18 @@ const addAssistant = async () => {
         .set("Authorization", `Bearer ${adminToken}`)
         .send(assistant)
         .expect(200);
-    return response.body.password;
+           
+    passwordAssistant =  response.body.password;
 };
 
 const getAssistantToken = async () => {
     if (assistantToken) {
         return assistantToken;
     }
-    const password = await addAssistant();
+    if(passwordAssistant==null){await addAssistant();}
     var creds = {
         username: assistant.email,
-        password: password,
+        password: passwordAssistant,
     };
     const response = await server
         .post("/users/login")
@@ -82,17 +87,18 @@ const addTourist = async () => {
         .set("Authorization", `Bearer ${assistantToken}`)
         .send(tourist)
         .expect(200);
-    return response.body.password;
+    passwordUser=  response.body.password;
 };
+ 
 
 const getTouristToken = async () => {
     if (userToken) {
         return userToken;
     }
-    const password = await addTourist();
+    if(passwordUser == null) { await addTourist();}
     var creds = {
         username: tourist.email,
-        password: password,
+        password: passwordUser,
     };
     const response = await server
         .post("/users/login")
@@ -101,11 +107,69 @@ const getTouristToken = async () => {
     return userToken;
 }
 
+const getExistingId = async () => {
+    const newTourist = {
+        "firstname": "Namal",
+        "lastname": "Fernamdo",
+        "email": "namalfernamdo@gmail.com",
+        "mobile": "981114844",
+        "rommnumber" : "41",
+
+    }
+    const tourist = new Users(newTourist);
+    await tourist.save();
+
+    return tourist._id.toString();
+
+    
+}
+
+const getNonExistingId = async () => {
+    const newTourist = {
+        "firstname": "Kamal",
+        "lastname": "Fernamdo",
+        "email": "kamalfernamdo@gmail.com",
+        "username": "kamalfernamdo@gmail.com"
+    }
+    const tourist = new Users(newTourist);
+    await tourist.save();
+    await tourist.remove();
+
+    return tourist._id.toString();
+}
+
+const getExistingIdAssistanct = async () => {
+    const newAssistant = {
+        "firstname": "Kasun",
+        "lastname": "Perera",
+        "email": "kasun@gmail.com",
+    }
+    const assistant = new Users(newAssistant);
+    await assistant.save();
+
+    return assistant._id.toString();
+
+    
+}
+
+const getNonExistingIdAssistant = async () => {
+    const newAssistant = {
+        "firstname": "Kamal",
+        "lastname": "Fernamdo",
+        "email": "kamalfernamdo@gmail.com"
+    }
+    const assistant = new Users(newAssistant);
+    await assistant.save();
+    await assistant.remove();
+
+    return assistant._id.toString();
+}
+
 const decodeToken = (token) => {
     var decoded = jwt_decode(token);
     return decoded;
 }
 
 module.exports = {
-    getAdminToken, getAssistantToken, getTouristToken, decodeToken
+    getAdminToken, getAssistantToken, getTouristToken, decodeToken, addTourist, getTouristToken ,getExistingId ,getNonExistingId, getExistingIdAssistanct, getNonExistingIdAssistant, addAssistant
 }

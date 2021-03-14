@@ -3,12 +3,14 @@ const server = require("supertest")(app);
 const expect = require("chai").expect;
 const assert = require('chai').assert;
 const Users = require('../models/users');
-const { decodeToken } = require('./helpers/user_helper');
+const {getExistingIdAssistanct,decodeToken} = require('../tests/helpers/user_helper');
 
 var adminToken;
+var id;
 
 beforeAll(async () => {
     await Users.deleteMany({});
+    id = await getExistingIdAssistanct();
 });
 
 describe('User Model', () => {
@@ -18,12 +20,32 @@ describe('User Model', () => {
 });
 
 describe("Admin SignUp & Login", () => {
-    var admin = {
+    var nonValidadmin = {
         "firstname": "Admin",
         "lastname": "Admin",
-        "email": "admin@gmail.com",
-        "password": "admin-password"
+        
     };
+
+    var admin = {
+        ...nonValidadmin, ...{  "password": "admin-password","email": "admin@gmail.com" }
+      };
+
+    
+
+    it("Admin SignUp - Validation error - 403", async (done) => {
+        const response = await server
+            .post("/users/signup/admin")
+            .send(nonValidadmin)
+            .expect(403)
+            .expect('Content-Type', /application\/json/);
+        expect(response.status).to.eql(403);
+        const receivedData = response.body;
+        expect(receivedData.success).to.eql(false);
+        expect(receivedData.status).to.eql('Registration Unsuccessful!');
+        done();
+    });
+
+
     it("Admin SignUp - 200", async (done) => {
         const response = await server
             .post("/users/signup/admin")
@@ -36,6 +58,7 @@ describe("Admin SignUp & Login", () => {
         expect(receivedData.status).to.eql('Registration Successful!');
         done();
     });
+
     it("Admin SignUp - Already Existing - 403", async (done) => {
         const response = await server
             .post("/users/signup/admin")
@@ -48,6 +71,42 @@ describe("Admin SignUp & Login", () => {
         expect(receivedData.status).to.eql('Registration Unsuccessful!');
         done();
     });
+
+    it("Admin Login with wrong credentials - wrong username - 401", async (done) => {
+        var creds = {
+            username: "123@gmail.com",
+            password: admin.password,
+        };
+        const response = await server
+            .post("/users/login")
+            .send(creds)
+            .expect(401)
+            .expect('Content-Type', /application\/json/);
+        expect(response.status).to.eql(401);
+        const receivedData = response.body;
+        expect(receivedData.success).to.eql(false);
+        expect(receivedData.status).to.eql('Login Unsuccessful!');
+        done();
+    });
+
+
+    it("Admin Login with wrong credentials - wrong password - 401", async (done) => {
+        var creds = {
+            username: admin.email,
+            password: "password",
+        };
+        const response = await server
+            .post("/users/login")
+            .send(creds)
+            .expect(401)
+            .expect('Content-Type', /application\/json/);
+        expect(response.status).to.eql(401);
+        const receivedData = response.body;
+        expect(receivedData.success).to.eql(false);
+        expect(receivedData.status).to.eql('Login Unsuccessful!');
+        done();
+    });
+
     it("Admin Login with correct credentials - 200", async (done) => {
         var creds = {
             username: admin.email,
